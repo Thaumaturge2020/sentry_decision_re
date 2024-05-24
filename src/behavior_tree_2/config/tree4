@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="Untitled">
+    <Fallback>
+      <TimeBegin time_during="{time_during}"
+                 true_or_false="0"/>
+      <Sequence>
+        <TimeCompuInterval time_limit_min=""
+                           time_limit_max=""/>
+        <Fallback>
+          <GimbalChooseEnemyNode now_enemy_id="2"/>
+          <GimbalChooseBuildingNode id="108"
+                                    shooting_speed="3.0"/>
+        </Fallback>
+        <SubTree ID="Navigation"
+                 area_choose="10"/>
+      </Sequence>
+      <Fallback>
+        <Judgenemy enemy_outpost_blood=""
+                   my_outpost_blood=""
+                   my_outpost_blood_lowerbound="800"
+                   my_outpost_blood_upperbound="1500"
+                   enemy_outpost_blood_lowerbound="0"
+                   enemy_outpost_blood_upperbound="0"/>
+        <Judgenemy enemy_outpost_blood=""
+                   my_outpost_blood=""
+                   my_outpost_blood_lowerbound="300"
+                   my_outpost_blood_upperbound="800"
+                   enemy_outpost_blood_lowerbound="0"
+                   enemy_outpost_blood_upperbound="0"/>
+        <Judgenemy enemy_outpost_blood=""
+                   my_outpost_blood=""
+                   my_outpost_blood_lowerbound="0"
+                   my_outpost_blood_upperbound="300"
+                   enemy_outpost_blood_lowerbound="0"
+                   enemy_outpost_blood_upperbound="0"/>
+        <Judgenemy enemy_outpost_blood=""
+                   my_outpost_blood=""
+                   my_outpost_blood_lowerbound="0"
+                   my_outpost_blood_upperbound="500"
+                   enemy_outpost_blood_lowerbound="600"
+                   enemy_outpost_blood_upperbound="1500"/>
+      </Fallback>
+    </Fallback>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="GimbalChooseBuildingNode"
+            editable="true">
+      <input_port name="id"/>
+      <input_port name="shooting_speed"/>
+    </Action>
+    <Action ID="GimbalChooseEnemyNode"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+    </Action>
+    <Action ID="Judgenemy"
+            editable="true">
+      <output_port name="enemy_outpost_blood"/>
+      <output_port name="my_outpost_blood"/>
+      <input_port name="my_outpost_blood_lowerbound"/>
+      <input_port name="my_outpost_blood_upperbound"/>
+      <input_port name="enemy_outpost_blood_lowerbound"/>
+      <input_port name="enemy_outpost_blood_upperbound"/>
+    </Action>
+    <Action ID="TimeBegin"
+            editable="true">
+      <output_port name="time_during"/>
+      <input_port name="true_or_false"/>
+    </Action>
+    <Action ID="TimeCompuInterval"
+            editable="true">
+      <input_port name="time_limit_min"/>
+      <input_port name="time_limit_max"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

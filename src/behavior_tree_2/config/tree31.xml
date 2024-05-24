@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4"
+      main_tree_to_execute="MainTree">
+  <BehaviorTree ID="AttackEnemy">
+    <Sequence>
+      <DecideEnemy chase_or_not=""
+                   target_enemy_id="{choose_enemy_id}"/>
+      <GimbalChooseEnemyNode now_enemy_id="{choose_enemy_id}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="EnemyMonitor">
+    <Sequence>
+      <CheckIfMonitorEnemy true_or_false="0"/>
+      <SubTree ID="Navigation"
+               area_choose="0"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <SetValOnceNode val_port="{val_port}"
+                      val_set="1"/>
+      <Fallback>
+        <Sequence>
+          <StayOriNode now_navigation_point="{now_navigation_point}"/>
+          <TimeBegin time_during="{time_during}"
+                     true_or_false="0"/>
+          <NavToSpecificPlace target_place="{now_navigation_point}"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_port="{val_port}"
+                        val_desire="2"/>
+          <Sequence>
+            <TimeCompuLimit now_game_time="0"
+                            first_interval="0"
+                            time_switch="1"
+                            time_limit1="20"
+                            time_limit2="10"/>
+            <Fallback>
+              <SubTree ID="Navigation"
+                       area_choose="4"/>
+              <SubTree ID="Navigation"
+                       area_choose="5"/>
+            </Fallback>
+          </Sequence>
+        </Sequence>
+        <Sequence>
+          <Fallback>
+            <Sequence>
+              <BaseDefenseCondition true_or_false="1"/>
+              <SubTree ID="Navigation"
+                       area_choose="0"/>
+            </Sequence>
+            <Sequence>
+              <NavHealNode heal_navigation_point="{heal_navigation_point}"
+                           interval_0="390"
+                           interval_1="400"/>
+              <SetValOnceNode val_port="{val_port}"
+                              val_set="2"/>
+              <NavToSpecificPlace target_place="{heal_navigation_point}"/>
+            </Sequence>
+          </Fallback>
+        </Sequence>
+        <Sequence>
+          <StayOriNode now_navigation_point="{now_navigation_point}"/>
+          <Fallback>
+            <OnFireNode true_or_false="0"/>
+          </Fallback>
+          <NavToSpecificPlace target_place="{now_navigation_point}"/>
+        </Sequence>
+        <Sequence>
+          <DecideEnemy chase_or_not="{chase_or_not}"
+                       target_enemy_id="{target_enemy_id}"/>
+          <GimbalChooseEnemyNode now_enemy_id="{target_enemy_id}"/>
+          <Fallback>
+            <CheckValNode val_port="{chase_or_not}"
+                          val_desire="0"/>
+            <NavToEnemy now_enemy_id="{target_enemy_id}"/>
+          </Fallback>
+        </Sequence>
+        <Sequence>
+          <Fallback>
+            <Sequence>
+              <DefenceBuildingNode building_id="8"
+                                   building_type="0"
+                                   building_blood_threshold="1000"/>
+              <SubTree ID="Navigation"
+                       area_choose="7"/>
+            </Sequence>
+            <Sequence>
+              <DefenceBuildingNode building_id="8"
+                                   building_type="0"
+                                   building_blood_threshold="400"/>
+              <SubTree ID="Navigation"
+                       area_choose="8"/>
+            </Sequence>
+            <SubTree ID="Navigation"
+                     area_choose="6"/>
+          </Fallback>
+        </Sequence>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="Navigation">
+    <Sequence>
+      <Patrol3Node area_choose="{area_choose}"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit="8.0"/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   self_point="{self_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="Navigation2">
+    <Sequence>
+      <Patrol3Node area_choose="0"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit=""/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   self_point="{self_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="Subtree">
+    <Sequence>
+      <Patrol3Node area_choose="5"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit=""
+                   time_limit=""/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   self_point="{self_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="BaseDefenseCondition"
+            editable="true">
+      <input_port name="true_or_false"/>
+    </Action>
+    <Action ID="CheckIfMonitorEnemy"
+            editable="true">
+      <input_port name="true_or_false"/>
+    </Action>
+    <Action ID="CheckValNode"
+            editable="true">
+      <input_port name="val_port"/>
+      <input_port name="val_desire"/>
+    </Action>
+    <Action ID="DecideEnemy"
+            editable="true">
+      <output_port name="chase_or_not"/>
+      <output_port name="target_enemy_id"/>
+    </Action>
+    <Action ID="DefenceBuildingNode"
+            editable="true">
+      <input_port name="building_id"/>
+      <input_port name="building_type"/>
+      <input_port name="building_blood_threshold"/>
+    </Action>
+    <Action ID="GimbalChooseEnemyNode"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+    </Action>
+    <Action ID="NavHealNode"
+            editable="true">
+      <output_port name="heal_navigation_point"/>
+      <input_port name="interval_0"/>
+      <input_port name="interval_1"/>
+    </Action>
+    <Action ID="NavToEnemy"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+    </Action>
+    <Action ID="NavToSpecificPlace"
+            editable="true">
+      <input_port name="target_place"/>
+    </Action>
+    <SubTree ID="Navigation"
+             editable="true">
+      <input_port name="area_choose"
+                  default="{area_choose}"/>
+    </SubTree>
+    <Action ID="OnFireNode"
+            editable="true">
+      <input_port name="true_or_false"/>
+    </Action>
+    <Action ID="Patrol2Node"
+            editable="true">
+      <input_port name="distance_limit_min"/>
+      <inout_port name="now_navigation_point"/>
+      <input_port name="navigation_point"/>
+      <input_port name="self_point"/>
+      <input_port name="distance_limit_max"/>
+    </Action>
+    <Action ID="Patrol3Node"
+            editable="true">
+      <inout_port name="area_choose"/>
+      <input_port name="time_begin"/>
+      <output_port name="navigation_point"/>
+      <input_port name="distance_limit"/>
+      <input_port name="time_limit"/>
+    </Action>
+    <Action ID="SetValOnceNode"
+            editable="true">
+      <output_port name="val_port"/>
+      <input_port name="val_set"/>
+    </Action>
+    <Action ID="StayOriNode"
+            editable="true">
+      <output_port name="now_navigation_point"/>
+    </Action>
+    <Action ID="TimeBegin"
+            editable="true">
+      <output_port name="time_during"/>
+      <input_port name="true_or_false"/>
+    </Action>
+    <Action ID="TimeCompuLimit"
+            editable="true">
+      <inout_port name="now_game_time"/>
+      <input_port name="first_interval"/>
+      <input_port name="time_switch"/>
+      <input_port name="time_limit1"/>
+      <input_port name="time_limit2"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

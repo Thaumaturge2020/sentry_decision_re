@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4" project_name="Project">
+    <include path="../../../../../tree3.xml"/>
+    <!-- Description of Node Models (used by Groot) -->
+    <TreeNodesModel>
+        <Action ID="NavToSpecificPlace" editable="true">
+            <input_port name="target_place"/>
+        </Action>
+        <Action ID="Patrol1" editable="true">
+            <input_port name="area_choose"/>
+            <input_port name="situation"/>
+            <output_port name="navigation_point"/>
+        </Action>
+        <Action ID="SetValOnceNode" editable="true">
+            <output_port name="val_port"/>
+            <input_port name="val_set"/>
+        </Action>
+        <Action ID="TimeBegin" editable="true">
+            <output_port name="time_during"/>
+            <input_port name="true_or_false"/>
+        </Action>
+        <Action ID="get_opblood_node" editable="true">
+            <output_port name="enemhy_outpost_blood"/>
+            <output_port name="my_outpost_blood"/>
+        </Action>
+        <Action ID="judgenemy_0_0" editable="true">
+            <input_port name="enemy_blo"/>
+            <input_port name="my_blo"/>
+        </Action>
+        <Action ID="judgeoutpost" editable="true">
+            <output_port name="id"/>
+        </Action>
+        <Action ID="nav_u_node" editable="true">
+            <input_port name="navigation_point"/>
+        </Action>
+    </TreeNodesModel>
+</root>

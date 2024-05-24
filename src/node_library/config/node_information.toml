@@ -1,0 +1,8 @@
+#set
+#遇到这个id不予考虑
+
+default_priority = [1,1,1,1,1,1,1,1]
+
+decide_enemy_vector_priority = [[7,1],[2],[3,4]]
+
+tree1_initial_priority_input = [[1,8],[2,3,4,5,7,9]]    

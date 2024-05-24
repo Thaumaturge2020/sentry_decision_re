@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4" project_name="Project">
+    <include path="tree1.xml"/>
+    <include path="tree2.xml"/>
+    <include path="tree3.xml"/>
+    <!-- Description of Node Models (used by Groot) -->
+    <TreeNodesModel>
+        <Action ID="DecideEnemy" editable="true">
+            <output_port name="target_enemy_id"/>
+            <output_port name="chase_or_not"/>
+            <input_port name="new_input"/>
+        </Action>
+        <Action ID="GimbalChooseBuildingNode" editable="true">
+            <input_port name="id"/>
+            <input_port name="shooting_speed"/>
+        </Action>
+        <Action ID="GimbalChooseEnemyNode" editable="true">
+            <input_port name="now_enemy_id"/>
+        </Action>
+        <Action ID="Judgenemy" editable="true">
+            <output_port name="enemy_outpost_blood"/>
+            <output_port name="my_outpost_blood"/>
+            <input_port name="my_outpost_blood_lowerbound"/>
+            <input_port name="my_outpost_blood_upperbound"/>
+            <input_port name="enemy_outpost_blood_lowerbound"/>
+            <input_port name="enemy_outpost_blood_upperbound"/>
+        </Action>
+        <Action ID="NavToSpecificPlace" editable="true">
+            <input_port name="target_place"/>
+        </Action>
+        <Action ID="Patrol2Node" editable="true">
+            <input_port name="distance_limit_min"/>
+            <output_port name="now_navigation_point"/>
+            <input_port name="navigation_point"/>
+            <input_port name="distance_limit_max"/>
+        </Action>
+        <Action ID="Patrol3Node" editable="true">
+            <inout_port name="area_choose"/>
+            <input_port name="time_begin"/>
+            <output_port name="navigation_point"/>
+            <input_port name="distance_limit"/>
+            <input_port name="time_limit"/>
+        </Action>
+        <Action ID="SetValOnceNode" editable="true">
+            <output_port name="val_port"/>
+            <input_port name="val_set"/>
+        </Action>
+        <Action ID="TimeBegin" editable="true">
+            <output_port name="time_during"/>
+            <input_port name="true_or_false"/>
+        </Action>
+        <Action ID="TimeCompuInterval" editable="true">
+            <input_port name="time_limit_min"/>
+            <input_port name="time_limit_max"/>
+        </Action>
+    </TreeNodesModel>
+</root>

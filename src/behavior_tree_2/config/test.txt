@@ -1,0 +1,3 @@
+ros2 topic pub /enemy_blood_info robot_msgs/msg/RobotBloodInfo data:\ [\{id:\ 0,blood:\ 100\}]\ 
+ros2 topic pub /autoaim2decision robot_msgs/msg/AutoaimInfo data:\ [\{id:\ 0,pos:\ \{x:\ 100,y:\ 100,z:\ 100\}\}]\ 
+ros2 topic pub /vitual_mode std_msgs/msg/Int32 data:\ 1\ 

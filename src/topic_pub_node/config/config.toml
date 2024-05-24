@@ -1,0 +1,14 @@
+
+# hero,engineer,soldier,soldier,sentry,outpost,base
+blood_array = [100,100,100,100,100,750,0,1500,
+100,100,100,100,100,750,500,500]
+game_time = 10
+robot_id = 107
+allow_bullet = 2
+vitual_mode = 0
+wait_seconds = 0
+use_time = 1
+
+robot_position_array = [[2.0,5.0],[13.0,5.0],[4.0,5.0],[4.0,2.5],[3.0,2.5],[12.5,0.5]]
+robot_id_array = [1,2,3,10,11,12]
+self_position = [5.0,5.0]

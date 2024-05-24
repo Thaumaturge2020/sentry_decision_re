@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "/opt/ros/humble/include/**",
+                "/home/blue-reimu/GIT/sentry_decision/src/behavior_tree_2/include/**",
+                "/home/blue-reimu/GIT/sentry_decision/src/nav2_behavior_tree_node/include/**",
+                "/home/blue-reimu/GIT/sentry_decision/src/node_library/include/**",
+                "/usr/include/**",
+                "${workspaceFolder}/src/node_library/include",
+                "${workspaceFolder}/build/robot_msgs/rosidl_generator_cpp",
+                "${workspaceFolder}/src/decision_utils/include"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
+}

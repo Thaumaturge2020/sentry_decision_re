@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4"
+      main_tree_to_execute="tree1">
+  <BehaviorTree ID="Navigation">
+    <Sequence>
+      <Patrol3Node area_choose="{area_choose}"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit="7.0"/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="RandomNavigation">
+    <Sequence>
+      <Patrol4Node area_id="{area_id}"
+                   random_gen_limit="{random_gen_limit}"
+                   now_navigation_point="{now_navigation_point}"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="RecoverTreeOnce">
+    <Sequence>
+      <NavHealNode heal_navigation_point="{now_navigation_point}"
+                   interval_0="160"
+                   interval_1="400"/>
+      <SubTree ID="Navigation"
+               area_choose="4"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="aerial_operator_decision">
+    <Sequence>
+      <OperatorNode expected_operator_mode="{aerial_type_choose}"
+                    expected_enemy="{calc_enemy_id}"/>
+      <Fallback>
+        <Sequence>
+          <CheckValNode val_desire="0"
+                        val_port="{aerial_type_choose}"/>
+          <GimbalChooseBuildingNode id="101"
+                                    shooting_speed="3"/>
+          <SubTree ID="Navigation"
+                   area_choose="7"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="1"
+                        val_port="{aerial_type_choose}"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="2"
+                        val_port="{aerial_type_choose}"/>
+          <NavToSpecificPlace target_place="{aerial_navigation_point}"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="3"
+                        val_port="{aerial_type_choose}"/>
+          <SubTree ID="tree_patrol_decision"
+                   patrol_decision_val="4"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="4"
+                        val_port="{aerial_type_choose}"/>
+          <NavToEnemy now_enemy_id="{calc_enemy_id}"/>
+          <GimbalChooseEnemyNode now_enemy_id="{calc_enemy_id}"
+                                 priority_input=""
+                                 priority_type="1_1_1_1_1_1_1_1"
+                                 priority_input_str="default_priority"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="5"
+                        val_port="{aerial_type_choose}"/>
+          <BuyBulletNode bullet_buy_num="50"
+                         reset_aerial_type="{aerial_type_choose}"/>
+          <SubTree ID="Navigation"
+                   area_choose="4"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="6"
+                        val_port="{aerial_type_choose}"/>
+          <GimbalChooseBuildingNode id="109"
+                                    shooting_speed="3"/>
+          <SubTree ID="Navigation"
+                   area_choose="3"/>
+        </Sequence>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="patrol_subtree_decision">
+    <Fallback>
+      <Sequence>
+        <CheckValNode val_desire="1"
+                      val_port="{strategy}"/>
+        <Fallback>
+          <Sequence>
+            <NavHealNode heal_navigation_point="{now_navigation_point}"
+                         interval_0="160"
+                         interval_1="400"/>
+            <NavToSpecificPlace target_place="{now_navigation_point}"/>
+          </Sequence>
+          <SubTree ID="RandomNavigation"
+                   area_id="1"
+                   random_gen_limit="3"/>
+        </Fallback>
+      </Sequence>
+      <Sequence>
+        <CheckIfBloodInterval true_or_false="0"
+                              target_id="7"
+                              minimum_blood="0"
+                              maximum_blood="160"/>
+        <SetValNode val_set="1"
+                    val_port="{strategy}"/>
+      </Sequence>
+      <SubTree ID="RandomNavigation"
+               area_id="{first_choose_id}"
+               random_gen_limit="3"/>
+    </Fallback>
+  </BehaviorTree>
+
+  <BehaviorTree ID="resurrection_decision">
+    <Sequence>
+      <ResurrectionNode area_choose="4"/>
+      <Patrol3Node area_choose="4"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit="5.0"/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="sub_decision">
+    <Sequence>
+      <ParamNode1 decision_type="{decision_type}"
+                  my_outpost_blood_lowerbound="{my_outpost_blood_lowerbound}"
+                  my_outpost_blood_upperbound="{my_outpost_blood_upperbound}"
+                  enemy_outpost_blood_lowerbound="{enemy_outpost_blood_lowerbound}"
+                  enemy_outpost_blood_upperbound="{enemy_outpost_blood_upperbound}"
+                  area_choose="{area_choose}"
+                  chase_distance_able="{chase_distance_able}"
+                  chase_distance_limit="{chase_distance_limit}"
+                  priority_input="{priority_input}"
+                  gimbal_choose_enemy_priority_input="{gimbal_choose_enemy_priority_input}"/>
+      <Judgenemy my_outpost_blood_lowerbound="{my_outpost_blood_lowerbound}"
+                 my_outpost_blood_upperbound="{my_outpost_blood_upperbound}"
+                 enemy_outpost_blood_lowerbound="{enemy_outpost_blood_lowerbound}"
+                 enemy_outpost_blood_upperbound="{enemy_outpost_blood_upperbound}"/>
+      <Fallback>
+        <Sequence>
+          <DecideEnemy target_enemy_id="{target_enemy_id}"
+                       chase_or_not="{chase_or_not}"
+                       priority_input="{priority_input}"
+                       chase_distance_limit="{chase_distance_limit}"
+                       chase_distance_able="{chase_distance_able}"
+                       priority_output="{priority_output}"/>
+          <GimbalChooseEnemyNode now_enemy_id="{target_enemy_id}"
+                                 priority_input="{priority_output}"
+                                 priority_type="{gimbal_choose_enemy_priority_input}"
+                                 priority_input_str=""/>
+          <NavToEnemy now_enemy_id="{target_enemy_id}"/>
+        </Sequence>
+        <SubTree ID="Navigation"
+                 area_choose="{area_choose}"/>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="tree1">
+    <Fallback>
+      <TimeBegin time_during="{time_during}"
+                 true_or_false="0"/>
+      <Sequence>
+        <Debugnode debug_output_id="1024"/>
+        <SubTree ID="resurrection_decision"/>
+      </Sequence>
+      <Sequence>
+        <Debugnode debug_output_id="2245"/>
+        <SubTree ID="aerial_operator_decision"
+                 _autoremap="false"/>
+      </Sequence>
+      <Sequence>
+        <Fallback>
+          <Judgenemy my_outpost_blood_lowerbound="500"
+                     my_outpost_blood_upperbound="1500"
+                     enemy_outpost_blood_lowerbound="1"
+                     enemy_outpost_blood_upperbound="1500"/>
+          <Judgenemy my_outpost_blood_lowerbound="0"
+                     my_outpost_blood_upperbound="500"
+                     enemy_outpost_blood_lowerbound="1"
+                     enemy_outpost_blood_upperbound="600"/>
+        </Fallback>
+        <Fallback>
+          <Sequence>
+            <DecideEnemy target_enemy_id="{target_enemy_id}"
+                         chase_or_not="{chase_or_not}"
+                         priority_input="tree1_initial_priority_input"
+                         chase_distance_limit="18"
+                         chase_distance_able="6"
+                         priority_output="{priority_output}"/>
+            <GimbalChooseEnemyNode now_enemy_id="2"
+                                   priority_input="{priority_output}"
+                                   priority_type="0_1_1_1_1_1_1_1"
+                                   priority_input_str=""/>
+          </Sequence>
+          <GimbalChooseBuildingNode id="108"
+                                    shooting_speed="3.0"/>
+        </Fallback>
+        <SubTree ID="Navigation"
+                 area_choose="2"/>
+        <Debugnode debug_output_id="2244"/>
+      </Sequence>
+      <Fallback>
+        <Sequence>
+          <SubTree ID="sub_decision"
+                   decision_type="0"
+                   _autoremap="true"/>
+          <Debugnode debug_output_id="45"/>
+        </Sequence>
+        <Sequence>
+          <SubTree ID="sub_decision"
+                   decision_type="1"
+                   _autoremap="true"/>
+          <Debugnode debug_output_id="11"/>
+        </Sequence>
+        <Sequence>
+          <SubTree ID="sub_decision"
+                   decision_type="2"
+                   _autoremap="true"/>
+          <Debugnode debug_output_id="22"/>
+        </Sequence>
+        <Sequence>
+          <SubTree ID="sub_decision"
+                   decision_type="3"
+                   _autoremap="true"/>
+          <Debugnode debug_output_id="33"/>
+        </Sequence>
+      </Fallback>
+    </Fallback>
+  </BehaviorTree>
+
+  <BehaviorTree ID="tree_patrol_decision">
+    <Fallback>
+      <Sequence>
+        <CheckValNode val_desire="1"
+                      val_port="{patrol_decision_val}"/>
+        <SubTree ID="RandomNavigation"
+                 area_id="0"
+                 random_gen_limit="3"/>
+      </Sequence>
+      <Sequence>
+        <CheckValNode val_desire="2"
+                      val_port="{patrol_decision_val}"/>
+        <SubTree ID="patrol_subtree_decision"
+                 strategy="{strategy_1}"
+                 first_choose_id="0"
+                 _autoremap="false"/>
+      </Sequence>
+      <Sequence>
+        <CheckValNode val_desire="3"
+                      val_port="{patrol_decision_val}"/>
+        <SubTree ID="RandomNavigation"
+                 area_id="1"
+                 random_gen_limit="3"/>
+      </Sequence>
+      <Sequence>
+        <CheckValNode val_desire="4"
+                      val_port="{patrol_decision_val}"/>
+        <SubTree ID="patrol_subtree_decision"
+                 strategy="{strategy_2}"
+                 first_choose_id="1"
+                 _autoremap="false"/>
+      </Sequence>
+      <Sequence>
+        <CheckValNode val_desire="5"
+                      val_port="{patrol_decision_val}"/>
+        <Fallback>
+          <Sequence>
+            <TimeCompuLimit time_limit1="30"
+                            time_limit2="30"
+                            first_interval="0"
+                            time_switch="1"/>
+            <SubTree ID="RandomNavigation"
+                     area_id="0"/>
+          </Sequence>
+          <SubTree ID="RandomNavigation"
+                   area_id="1"/>
+        </Fallback>
+      </Sequence>
+      <Sequence>
+        <CheckValNode val_desire="6"
+                      val_port="{patrol_decision_val}"/>
+        <Fallback>
+          <Sequence>
+            <NavHealNode heal_navigation_point="{now_navigation_point}"
+                         interval_0="160"
+                         interval_1="400"/>
+            <NavToSpecificPlace target_place="{now_navigation_point}"/>
+          </Sequence>
+          <Sequence>
+            <TimeCompuLimit time_limit1="30"
+                            time_limit2="30"
+                            first_interval="0"
+                            time_switch="1"/>
+            <SubTree ID="RandomNavigation"
+                     area_id="0"/>
+          </Sequence>
+          <SubTree ID="RandomNavigation"
+                   area_id="1"/>
+        </Fallback>
+      </Sequence>
+    </Fallback>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="BuyBulletNode"
+            editable="true">
+      <input_port name="bullet_buy_num"/>
+      <input_port name="reset_aerial_type"/>
+    </Action>
+    <Action ID="CheckIfBloodInterval"
+            editable="true">
+      <input_port name="true_or_false"/>
+      <input_port name="target_id"/>
+      <input_port name="minimum_blood"/>
+      <input_port name="maximum_blood"/>
+    </Action>
+    <Action ID="CheckValNode"
+            editable="true">
+      <input_port name="val_desire"/>
+      <input_port name="val_port"/>
+    </Action>
+    <Action ID="Debugnode"
+            editable="true">
+      <input_port name="debug_output_id"/>
+    </Action>
+    <Action ID="DecideEnemy"
+            editable="true">
+      <output_port name="target_enemy_id"/>
+      <output_port name="chase_or_not"/>
+      <input_port name="priority_input"/>
+      <input_port name="chase_distance_limit"/>
+      <input_port name="chase_distance_able"/>
+      <output_port name="priority_output"/>
+    </Action>
+    <Action ID="GimbalChooseBuildingNode"
+            editable="true">
+      <input_port name="id"/>
+      <input_port name="shooting_speed"/>
+    </Action>
+    <Action ID="GimbalChooseEnemyNode"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+      <input_port name="priority_input"/>
+      <input_port name="priority_type"/>
+      <input_port name="priority_input_str"/>
+    </Action>
+    <Action ID="Judgenemy"
+            editable="true">
+      <input_port name="my_outpost_blood_lowerbound"/>
+      <input_port name="my_outpost_blood_upperbound"/>
+      <input_port name="enemy_outpost_blood_lowerbound"/>
+      <input_port name="enemy_outpost_blood_upperbound"/>
+    </Action>
+    <Action ID="NavHealNode"
+            editable="true">
+      <output_port name="heal_navigation_point"/>
+      <input_port name="interval_0"/>
+      <input_port name="interval_1"/>
+    </Action>
+    <Action ID="NavToEnemy"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+    </Action>
+    <Action ID="NavToSpecificPlace"
+            editable="true">
+      <input_port name="target_place"/>
+    </Action>
+    <Action ID="OperatorNode"
+            editable="true">
+      <input_port name="expected_operator_mode"/>
+      <input_port name="expected_enemy"/>
+    </Action>
+    <Action ID="ParamNode1"
+            editable="true">
+      <input_port name="decision_type"/>
+      <output_port name="my_outpost_blood_lowerbound"/>
+      <output_port name="my_outpost_blood_upperbound"/>
+      <output_port name="enemy_outpost_blood_lowerbound"/>
+      <output_port name="enemy_outpost_blood_upperbound"/>
+      <output_port name="area_choose"/>
+      <output_port name="chase_distance_able"/>
+      <output_port name="chase_distance_limit"/>
+      <output_port name="priority_input"/>
+      <output_port name="gimbal_choose_enemy_priority_input"/>
+    </Action>
+    <Action ID="Patrol2Node"
+            editable="true">
+      <input_port name="distance_limit_min"/>
+      <output_port name="now_navigation_point"/>
+      <input_port name="navigation_point"/>
+      <input_port name="distance_limit_max"/>
+    </Action>
+    <Action ID="Patrol3Node"
+            editable="true">
+      <inout_port name="area_choose"/>
+      <input_port name="time_begin"/>
+      <output_port name="navigation_point"/>
+      <input_port name="distance_limit"/>
+      <input_port name="time_limit"/>
+    </Action>
+    <Action ID="Patrol4Node"
+            editable="true">
+      <input_port name="area_id"/>
+      <input_port name="random_gen_limit"/>
+      <inout_port name="now_navigation_point"/>
+    </Action>
+    <Action ID="ResurrectionNode"
+            editable="true">
+      <input_port name="area_choose"/>
+    </Action>
+    <Action ID="SetValNode"
+            editable="true">
+      <input_port name="val_set"/>
+      <output_port name="val_port"/>
+    </Action>
+    <Action ID="TimeBegin"
+            editable="true">
+      <output_port name="time_during"/>
+      <input_port name="true_or_false"/>
+    </Action>
+    <Action ID="TimeCompuLimit"
+            editable="true">
+      <input_port name="time_limit1"/>
+      <input_port name="time_limit2"/>
+      <input_port name="first_interval"/>
+      <input_port name="time_switch"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

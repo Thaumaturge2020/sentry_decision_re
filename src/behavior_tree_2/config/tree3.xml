@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4"
+      main_tree_to_execute="tree3">
+  <BehaviorTree ID="Navigation">
+    <Sequence>
+      <Patrol3Node area_choose="{area_choose}"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit="7.0"/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="tree3">
+    <Sequence>
+      <TimeBegin time_during="{time_during}"
+                 true_or_false="1"/>
+      <SetValOnceNode val_port="{val_port}"
+                      val_set="3"/>
+      <Fallback>
+        <Sequence>
+          <Fallback>
+            <Judgenemy my_outpost_blood_lowerbound="0"
+                       my_outpost_blood_upperbound="0"
+                       enemy_outpost_blood_lowerbound="0"
+                       enemy_outpost_blood_upperbound="1500"/>
+            <Judgenemy my_outpost_blood_lowerbound="0"
+                       my_outpost_blood_upperbound="1500"
+                       enemy_outpost_blood_lowerbound="0"
+                       enemy_outpost_blood_upperbound="0"/>
+          </Fallback>
+          <SubTree ID="Navigation"
+                   area_choose="0"
+                   _autoremap="false"/>
+        </Sequence>
+        <Sequence>
+          <SubTree ID="Navigation"
+                   area_choose="2"
+                   _autoremap="false"/>
+          <GimbalChooseBuildingNode id="108"
+                                    shooting_speed="0"/>
+        </Sequence>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="GimbalChooseBuildingNode"
+            editable="true">
+      <input_port name="id"/>
+      <input_port name="shooting_speed"/>
+    </Action>
+    <Action ID="Judgenemy"
+            editable="true">
+      <input_port name="my_outpost_blood_lowerbound"/>
+      <input_port name="my_outpost_blood_upperbound"/>
+      <input_port name="enemy_outpost_blood_lowerbound"/>
+      <input_port name="enemy_outpost_blood_upperbound"/>
+    </Action>
+    <Action ID="NavToSpecificPlace"
+            editable="true">
+      <input_port name="target_place"/>
+    </Action>
+    <Action ID="Patrol2Node"
+            editable="true">
+      <input_port name="distance_limit_min"/>
+      <output_port name="now_navigation_point"/>
+      <input_port name="navigation_point"/>
+      <input_port name="distance_limit_max"/>
+    </Action>
+    <Action ID="Patrol3Node"
+            editable="true">
+      <inout_port name="area_choose"/>
+      <input_port name="time_begin"/>
+      <output_port name="navigation_point"/>
+      <input_port name="distance_limit"/>
+      <input_port name="time_limit"/>
+    </Action>
+    <Action ID="SetValOnceNode"
+            editable="true">
+      <output_port name="val_port"/>
+      <input_port name="val_set"/>
+    </Action>
+    <Action ID="TimeBegin"
+            editable="true">
+      <output_port name="time_during"/>
+      <input_port name="true_or_false"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

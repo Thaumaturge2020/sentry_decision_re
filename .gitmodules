@@ -1,0 +1,6 @@
+[submodule "robot_msgs"]
+	path = robot_msgs
+	url = https://gitlab.ngxy.team/algo/sentry/modules/robot_msgs.git
+[submodule "decision_dependence"]
+	path = decision_dependence
+	url = https://gitlab.ngxy.team/algo/sentry/decision_dependence.git

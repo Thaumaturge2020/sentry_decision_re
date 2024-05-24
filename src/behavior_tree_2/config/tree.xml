@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="MainTree">
+    <Fallback name="root">
+      <BaseAttackSpecificEnemyNode require_enemy_id="{require_enemy_id}"
+                                   target_enemy_id="{target_enemy_id}"/>
+      <DefenceBuildingNode building_id="{building_id}"
+                           building_type=""
+                           building_blood_threshold=""/>
+      <NavigationBuildingNode now_build_id="{now_build_id}"/>
+      <GimbalChooseEnemyNode now_enemy_id="0"/>
+    </Fallback>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="BaseAttackSpecificEnemyNode"
+            editable="true">
+      <input_port name="require_enemy_id"/>
+      <input_port name="target_enemy_id"/>
+    </Action>
+    <Action ID="DefenceBuildingNode"
+            editable="true">
+      <input_port name="building_id"/>
+      <input_port name="building_type"/>
+      <input_port name="building_blood_threshold"/>
+    </Action>
+    <Action ID="GimbalChooseEnemyNode"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+    </Action>
+    <Action ID="NavigationBuildingNode"
+            editable="true">
+      <input_port name="now_build_id"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

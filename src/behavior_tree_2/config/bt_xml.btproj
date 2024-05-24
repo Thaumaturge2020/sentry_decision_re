@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4" project_name="Project">
+    <include path="../../../../sentry_all_ws/src/sentry_decision/src/behavior_tree_2/config/tree2.xml"/>
+    <!-- Description of Node Models (used by Groot) -->
+    <TreeNodesModel>
+        <Action ID="DecideEnemy" editable="true">
+            <input_port name="now_enemy_id"/>
+            <output_port name="target_enemy_id"/>
+        </Action>
+        <Action ID="DefenceBuildingNode" editable="true">
+            <input_port name="building_id"/>
+            <input_port name="building_type"/>
+            <input_port name="build_blood_threshold"/>
+        </Action>
+        <Action ID="GimbalChooseEnemyNode" editable="true">
+            <input_port name="now_enemy_id"/>
+        </Action>
+        <Action ID="NavToSpecificPlace" editable="true">
+            <input_port name="target_place"/>
+        </Action>
+        <SubTree ID="Navigation" editable="true">
+            <input_port name="area_choose" default="{area_choose}"/>
+        </SubTree>
+        <Action ID="Patrol2Node" editable="true">
+            <input_port name="distance_limit_min"/>
+            <inout_port name="now_navigation_point"/>
+            <input_port name="navigation_point"/>
+            <input_port name="self_point"/>
+            <input_port name="distance_limit_max"/>
+        </Action>
+        <Action ID="Patrol3Node" editable="true">
+            <inout_port name="area_choose"/>
+            <input_port name="time_begin"/>
+            <output_port name="navigation_point"/>
+            <input_port name="distance_limit"/>
+        </Action>
+        <Action ID="TimeCompuLimit" editable="true">
+            <output_port name="now_game_time"/>
+            <input_port name="first_interval"/>
+            <input_port name="time_switch"/>
+            <input_port name="time_limit1"/>
+            <input_port name="time_limit2"/>
+        </Action>
+    </TreeNodesModel>
+</root>
