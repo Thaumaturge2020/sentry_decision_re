@@ -13,7 +13,7 @@ namespace BehaviorTree
 
         subscription_autoaim_able = gimbal_choose_enemy_node->create_subscription<std_msgs::msg::Int32>("/vitual_mode", 10, std::bind(&GimbalChooseEnemyNode::message_callback_autoaim_able, this, std::placeholders::_1));
         subscription_enemy_pos = gimbal_choose_enemy_node->create_subscription<robot_msgs::msg::AutoaimInfo>("/autoaim2decision", 10, std::bind(&GimbalChooseEnemyNode::message_callback_enemy_pos, this, std::placeholders::_1));
-        publisher_enemy_info = gimbal_choose_enemy_node->create_publisher<robot_msgs::msg::CamCommand>("/decision2autoaim", 10);
+        publisher_enemy_info = gimbal_choose_enemy_node->create_publisher<robot_msgs::msg::CamCommand>("/decision2transmit", 10);
     }
 
     void GimbalChooseEnemyNode::message_callback_autoaim_able(const std_msgs::msg::Int32 &msg)
