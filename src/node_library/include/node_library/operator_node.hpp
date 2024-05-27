@@ -24,6 +24,7 @@ namespace BehaviorTree{
                 return {
                     BT::OutputPort<int>("expected_operator_mode"),
                     BT::OutputPort<int>("expected_enemy"),
+                    BT::OutputPort<geometry_msgs::msg::Point>("expected_place"),
                 };
             }
             BT::NodeStatus tick() override;

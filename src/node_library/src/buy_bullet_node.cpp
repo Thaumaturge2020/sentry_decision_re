@@ -21,13 +21,18 @@ namespace BehaviorTree{
                     });
                     
                     start_reach_Time = rclcpp::Clock().now();
+
+                    int area_id = 0;getInput<int>("area_id",area_id);
+                    std::vector<std::vector<std::pair<double,double> > > navigate_area = toml::find< std::vector<std::vector<std::pair<double,double> > > > (toml_file,"navigation_position");
+                    navigation_point.x = navigate_area[area_id][0].first;
+                    navigation_point.y = navigate_area[area_id][0].second;
+                    navigation_point.z = 0;
                 }
 
     BT::NodeStatus BuyBulletNode::tick()
     {
-        if(!getInput<geometry_msgs::msg::Point>("navigation_point",navigation_point))   return BT::NodeStatus::FAILURE;
         
-        RCLCPP_INFO(rclcpp::get_logger("BuyBulletNode"),"I'm ticked");
+        // RCLCPP_INFO(rclcpp::get_logger("BuyBulletNode"),"I'm ticked");
         rclcpp::spin_some(node1);
         int given_id,bullet_buy_num;
 
@@ -35,6 +40,8 @@ namespace BehaviorTree{
             able_buy = 1;
             start_reach_Time = rclcpp::Clock().now();
         }
+
+        // RCLCPP_INFO(rclcpp::get_logger("self_position"),"%d %lf %lf %lf %lf %lf",able_buy,self_position.first,navigation_point.x,self_position.second,navigation_point.y,Eigen::Vector3d(self_position.first - navigation_point.x,self_position.second - navigation_point.y,0).norm());
         
         if(able_buy && (rclcpp::Clock().now() - start_reach_Time).seconds() >= 2.5){
             if(getInput<int>("bullet_buy_num",bullet_buy_num)){

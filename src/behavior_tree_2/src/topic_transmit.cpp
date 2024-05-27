@@ -9,6 +9,7 @@
 #include "robot_msgs/msg/gimbal_data.hpp"
 #include "robot_msgs/msg/referee_data.hpp"
 #include "robot_msgs/msg/build_state.hpp"
+#include "robot_msgs/msg/cam_command.hpp"
 #include "rm_interfaces/msg/perception.hpp"
 
 
@@ -31,6 +32,7 @@ namespace topic_transimit_node {
         rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr publisher_enemy_sentry_blood;
         rclcpp::Publisher<robot_msgs::msg::BuildState>::SharedPtr publisher_my_outpost_blood;
         rclcpp::Publisher<robot_msgs::msg::BuildState>::SharedPtr publisher_enemy_outpost_blood;
+        rclcpp::Publisher<robot_msgs::msg::CamCommand>::SharedPtr publisher_10;
 
         rclcpp::Subscription<robot_msgs::msg::GimbalData>::SharedPtr subscription_1;
         rclcpp::Subscription<robot_msgs::msg::RefereeData>::SharedPtr subscription_2;
@@ -40,6 +42,8 @@ namespace topic_transimit_node {
         rclcpp::Subscription<rm_interfaces::msg::Perception>::SharedPtr subscription_perception_3;
         rclcpp::Subscription<rm_interfaces::msg::Perception>::SharedPtr subscription_perception_4;
 
+        rclcpp::Subscription<robot_msgs::msg::CamCommand>::SharedPtr subscription_enemy_pos;
+
         std_msgs::msg::Int32 game_time_msg;
         std_msgs::msg::Int32 self_id_msg;
         robot_msgs::msg::RobotBloodInfo robot_blood_msg;
@@ -48,6 +52,8 @@ namespace topic_transimit_node {
         std_msgs::msg::Int32 bullet_number_msg;
 
         int spin_flag;
+
+        int ally_sentry_invicinble,enemy_sentry_invicinble;
         
         TopicTransmitter(const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
                 : Node("TopicTransmitter"),
@@ -61,6 +67,7 @@ namespace topic_transimit_node {
                   publisher_7 = this->create_publisher<std_msgs::msg::Int32>("/EC2DSbase", 10);
                   publisher_8 = this->create_publisher<std_msgs::msg::Int32>("/bullet_number", 10);
                   publisher_9 = this->create_publisher<std_msgs::msg::Int32>("/ECBaseAngle",10);
+                  publisher_10 = this->create_publisher<robot_msgs::msg::CamCommand>("/transmit2autoaim",10);
                   publisher_spin = this->create_publisher<std_msgs::msg::Int32>("/decision2ECbasespin",10);
                   publisher_my_outpost_blood = this->create_publisher<robot_msgs::msg::BuildState>("my_outpost_blood", 10);
                   publisher_enemy_outpost_blood = this->create_publisher<robot_msgs::msg::BuildState>("enemy_outpost_blood", 10);
@@ -73,12 +80,20 @@ namespace topic_transimit_node {
                   subscription_perception_4 = this->create_subscription<rm_interfaces::msg::Perception>("/detection_4/detection_armor_enemy", 10, std::bind(&TopicTransmitter::subscription_Perception_4, this, std::placeholders::_1));
                   
                 
-                  //subscription_enemy_pos = gimbal_choose_enemy_node->create_subscription<robot_msgs::msg::AutoaimInfo>("/autoaim2decision", 10, std::bind(&GimbalChooseEnemyNode::message_callback_enemy_pos, this, std::placeholders::_1));
+                  subscription_enemy_pos = this->create_subscription<robot_msgs::msg::CamCommand>("/decision2transmit", 10, [this](const robot_msgs::msg::CamCommand &rec_msg){
+                    robot_msgs::msg::CamCommand msg = rec_msg;
+                    if(enemy_sentry_invicinble){
+                        msg.priority_type_arr[5] = 2;
+                    }
+                    publisher_10->publish(msg);
+                  });
 
                   subscription_1 = this->create_subscription<robot_msgs::msg::GimbalData>("/easy_robot_commands/offset_data",10,std::bind(&TopicTransmitter::subscription_Gimbal_Data,this,std::placeholders::_1));
                   subscription_2 = this->create_subscription<robot_msgs::msg::RefereeData>("/easy_robot_commands/referee_data_for_decision",10,std::bind(&TopicTransmitter::subscription_Referee_Data,this,std::placeholders::_1));
                   subscription_spin = this->create_subscription<std_msgs::msg::Int32>("/decision2ECbasespin",10,std::bind(&TopicTransmitter::subscription_Spin_Data,this,std::placeholders::_1));
                   spin_flag = -1;
+                  enemy_sentry_invicinble = 1;
+                  ally_sentry_invicinble = 1;
         }
 
         std::map<int,geometry_msgs::msg::Point> robot_pos_map;
@@ -126,6 +141,18 @@ namespace topic_transimit_node {
             bullet_number_msg.data = (int)msg.allow_bullet;
             self_id_msg.data = (int)msg.robot_id;
             robot_blood_msg.data = msg.data;
+            for(int i=0,lim = robot_blood_msg.data.size();i<lim;++i){
+                if(robot_blood_msg.data[i].id % 100 == 8){
+                    if(robot_blood_msg.data[i].id / 100 == self_id_msg.data / 100){
+                        if(robot_blood_msg.data[i].blood < 1500)
+                        ally_sentry_invicinble = 0;
+                    }
+                    else{
+                        if(robot_blood_msg.data[i].blood < 1500)
+                        enemy_sentry_invicinble = 0;
+                    }
+                }
+            }
             return;
         }
         

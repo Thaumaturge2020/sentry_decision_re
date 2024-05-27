@@ -43,6 +43,10 @@ namespace topic_pub_node_1 {
             robot_msgs::msg::AerialCommands data3;
             data2.id = 0,data2.blood = 100;
             data1.id = 1,data1.pos.x = 8,data1.pos.y = 8,data1.pos.z = 0;
+            const auto toml_file = toml::parse(ROOT "config/config.toml");
+            std::string input = toml::find<std::string>(toml_file,"cmd_keyboard");
+            data3.cmd_keyboard = input[0];
+            if(data3.cmd_keyboard == 0)
             data3.target_robot_id = 2;
 
             double start_pos_x = 2.898,start_pos_y = 3.353;

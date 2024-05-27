@@ -79,10 +79,13 @@ namespace BehaviorTree
 
         std::string my_str;
         getInput<std::string>("priority_type", my_str);
-        //  RCLCPP_INFO(rclcpp::get_logger("GimbalChooseEnemyNode"), "Into 4 %s",my_str.c_str());
+        // RCLCPP_INFO(rclcpp::get_logger("GimbalChooseEnemyNode"), "Into 4 %s",my_str.c_str());
 
         std::vector<int> priority_type_int_arr;
         priority_type_int_arr = decision_utils::string_parser::GetIntArray(my_str);
+        // for(auto i:priority_type_int_arr){
+        //     RCLCPP_INFO(rclcpp::get_logger("GimbalChooseEnemyNode"), "Into 5 %d",i);
+        // }
         std::vector<unsigned char> priority_type_char_arr,priority_input_char_arr;
 
         for(auto i:priority_type_int_arr) priority_type_char_arr.push_back((unsigned char)i);

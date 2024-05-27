@@ -46,10 +46,16 @@ namespace BehaviorTree{
     BT::NodeStatus OperatorNode::tick(){
         // RCLCPP_INFO(rclcpp::get_logger("operator_node"),"I'm ticked");
         rclcpp::spin_some(node1);
-        
         setOutput<int>("expected_operator_mode",aerial_type);
         if(aerial_type == -1)
         return BT::NodeStatus::FAILURE;
+        if(aerial_type == 2){
+            geometry_msgs::msg::Point msg;
+            msg.x = navigate_point.x;
+            msg.y = navigate_point.y;
+            msg.z = 0;
+            setOutput<geometry_msgs::msg::Point>("expected_place",msg);
+        }
         if(aerial_type == 4){
             setOutput<int>("expected_enemy",decision_utils::id_mapping::referee2autoaim(target_enemy));
         }

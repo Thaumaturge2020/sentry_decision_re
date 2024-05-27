@@ -12,12 +12,20 @@ namespace BehaviorTree
         ss << "gimbal_choose_building_node";
         gimbal_choose_building_node = rclcpp::Node::make_shared(ss.str().c_str());
 
+        game_time = 0;
+        buff_status = 0;
+
         subscription_base_angle = gimbal_choose_building_node->create_subscription<std_msgs::msg::Float64>("EC2DS/base", 10, std::bind(&GimbalChooseBuildingNode::message_callback_base_angle, this, std::placeholders::_1));
         subscription_cam_angle = gimbal_choose_building_node->create_subscription<std_msgs::msg::Float64>("EC2DS/cam", 10, std::bind(&GimbalChooseBuildingNode::message_callback_cam_angle, this, std::placeholders::_1));
         subscription_base2cam_angle = gimbal_choose_building_node->create_subscription<std_msgs::msg::Float64>("EC2DS/base2cam", 10, std::bind(&GimbalChooseBuildingNode::message_callback_base2cam_angle, this, std::placeholders::_1));
         subscription_autoaim_able = gimbal_choose_building_node->create_subscription<std_msgs::msg::Int32>("/vitual_mode", 10, std::bind(&GimbalChooseBuildingNode::message_callback_autoaim_able, this, std::placeholders::_1));
         subscription_enemy_pos = gimbal_choose_building_node->create_subscription<robot_msgs::msg::AutoaimInfo>("/autoaim2decision", 10, std::bind(&GimbalChooseBuildingNode::message_callback_enemy_pos, this, std::placeholders::_1));
         subscription_my_pos = gimbal_choose_building_node->create_subscription<nav_msgs::msg::Odometry>("/Odometry_Vehicle",10,std::bind(&GimbalChooseBuildingNode::message_callback_my_pos, this, std::placeholders::_1));
+        subscription_game_time = gimbal_choose_building_node->create_subscription<std_msgs::msg::Int32>("/game_time",10,[this](const std_msgs::msg::Int32 &msg){
+            game_time = msg.data;
+            if(game_time < 210)
+            buff_status = 1;
+        });
         publisher_enemy_info = gimbal_choose_building_node->create_publisher<robot_msgs::msg::CamCommand>("/decision2transmit", 10);
         building_pos = toml::find<std::vector<std::vector< double > > >(battle_data,"building_pos");
         self_start_point = toml::find<std::pair<double,double> >(battle_data,"self_position");
@@ -108,6 +116,9 @@ namespace BehaviorTree
         double azimuth = my_pos_angle + cam_angle - base_angle - base2cam_angle;
         robot_msgs::msg::CamCommand pub_msg;
         pub_msg.autoaim_mode = 2;
+        if(building_id%100 == 1)
+        pub_msg.autoaim_mode = buff_status ? 5:4;
+
         unsigned char element = building_id%100;
         std::vector<unsigned char> empty_arr;
         pub_msg.priority_type_arr = empty_arr;

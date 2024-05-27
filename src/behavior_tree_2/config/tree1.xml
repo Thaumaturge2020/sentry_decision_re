@@ -38,7 +38,8 @@
   <BehaviorTree ID="aerial_operator_decision">
     <Sequence>
       <OperatorNode expected_operator_mode="{aerial_type_choose}"
-                    expected_enemy="{calc_enemy_id}"/>
+                    expected_enemy="{calc_enemy_id}"
+                    expected_place="{aerial_navigation_point}"/>
       <Fallback>
         <Sequence>
           <CheckValNode val_desire="0"
@@ -55,6 +56,7 @@
         <Sequence>
           <CheckValNode val_desire="2"
                         val_port="{aerial_type_choose}"/>
+          <Debugnode debug_output_id="114514"/>
           <NavToSpecificPlace target_place="{aerial_navigation_point}"/>
         </Sequence>
         <Sequence>
@@ -76,7 +78,8 @@
           <CheckValNode val_desire="5"
                         val_port="{aerial_type_choose}"/>
           <BuyBulletNode bullet_buy_num="50"
-                         reset_aerial_type="{aerial_type_choose}"/>
+                         reset_aerial_type="{aerial_type_choose}"
+                         area_id="5"/>
           <SubTree ID="Navigation"
                    area_choose="4"/>
         </Sequence>
@@ -95,6 +98,8 @@
   <BehaviorTree ID="patrol_subtree_decision">
     <Fallback>
       <Sequence>
+        <SetValOnceNode val_set="-1"
+                        val_port="{strategy}"/>
         <CheckValNode val_desire="1"
                       val_port="{strategy}"/>
         <Fallback>
@@ -120,6 +125,7 @@
       <SubTree ID="RandomNavigation"
                area_id="{first_choose_id}"
                random_gen_limit="3"/>
+      <Debugnode debug_output_id="898989"/>
     </Fallback>
   </BehaviorTree>
 
@@ -327,6 +333,7 @@
             editable="true">
       <input_port name="bullet_buy_num"/>
       <input_port name="reset_aerial_type"/>
+      <input_port name="area_id"/>
     </Action>
     <Action ID="CheckIfBloodInterval"
             editable="true">
@@ -388,8 +395,9 @@
     </Action>
     <Action ID="OperatorNode"
             editable="true">
-      <input_port name="expected_operator_mode"/>
-      <input_port name="expected_enemy"/>
+      <output_port name="expected_operator_mode"/>
+      <output_port name="expected_enemy"/>
+      <output_port name="expected_place"/>
     </Action>
     <Action ID="ParamNode1"
             editable="true">
@@ -433,6 +441,11 @@
             editable="true">
       <input_port name="val_set"/>
       <output_port name="val_port"/>
+    </Action>
+    <Action ID="SetValOnceNode"
+            editable="true">
+      <input_port name="val_set"/>
+      <input_port name="val_port"/>
     </Action>
     <Action ID="TimeBegin"
             editable="true">

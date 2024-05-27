@@ -17,6 +17,9 @@ namespace decision_utils{
                 num = 0;
                 num = num*10 + str[i] - '0';
             }
+            if(num >= 0)
+            vec.push_back(num);
+            num = -1;
             return vec;
         }
     };

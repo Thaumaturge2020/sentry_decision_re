@@ -25,8 +25,11 @@ namespace BehaviorTree{
             rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription_base2cam_angle;
             rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr subscription_autoaim_able;
             rclcpp::Subscription<robot_msgs::msg::AutoaimInfo>::SharedPtr subscription_enemy_pos;
+            rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr subscription_game_time;
             rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_my_pos;
             rclcpp::Publisher<robot_msgs::msg::CamCommand>::SharedPtr publisher_enemy_info;
+
+            int game_time,buff_status;
 
             rclcpp::Node::SharedPtr gimbal_choose_building_node;
             GimbalChooseBuildingNode(const std::string&name, const BT::NodeConfig& config);

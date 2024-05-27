@@ -24,7 +24,7 @@ namespace BehaviorTree{
                     std::vector<std::vector<std::pair<double,double> > > generate_graph = toml::find<std::vector<std::vector<std::pair<double,double> > > >(toml_file , "random_restrict_area");
                     int area_id;getInput<int>("area_id",area_id);
 
-                    std::vector<std::pair<double,double> > restrict_area = generate_graph[area_id];
+                    restrict_area = generate_graph[area_id];
 
                     for(auto point : restrict_area){
                         mini_X = std::min(mini_X,point.first);
@@ -54,11 +54,16 @@ namespace BehaviorTree{
 
         while(!decision_utils::judging_point::judging_point(std::pair<double,double>(pos_x,pos_y),restrict_area)){
             pos_x = get_random01() * (maxi_X - mini_X) + mini_X;
-            pos_y = get_random01()                                                                                 * (maxi_Y - mini_Y) + mini_Y;
+            pos_y = get_random01() * (maxi_Y - mini_Y) + mini_Y;
+            // for(auto point : restrict_area){
+            //     RCLCPP_INFO(rclcpp::get_logger("Patorl 4"),"area:%lf %lf",point.first,point.second);
+            // }
         }
+        // RCLCPP_INFO(rclcpp::get_logger("Patorl 4"),"area:%lf %lf",pos_x,pos_y);
         now_navigation_point.x = pos_x;
         now_navigation_point.y = pos_y;
         now_navigation_point.z = 0;
+        // RCLCPP_INFO(rclcpp::get_logger("Patorl 4"),"Patrol4 6");
     
         setOutput<geometry_msgs::msg::Point>("now_navigation_point",now_navigation_point);
         return BT::NodeStatus::SUCCESS;

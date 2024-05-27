@@ -8,8 +8,11 @@ namespace BehaviorTree{
     BT::NodeStatus CheckValNode::tick()
     {
         int my_val = 0;
-        getInput<int>("val_desire",val_desire);
-        getInput<int>("val_port",my_val);
+        // RCLCPP_INFO(rclcpp::get_logger("CheckValNode"),"????");
+        if(!getInput<int>("val_desire",val_desire)) return BT::NodeStatus::FAILURE;
+        // RCLCPP_INFO(rclcpp::get_logger("CheckValNode"),".....");
+        if(!getInput<int>("val_port",my_val))       return BT::NodeStatus::FAILURE;
+        // RCLCPP_INFO(rclcpp::get_logger("CheckValNode"),">>>>>");
         // RCLCPP_INFO(rclcpp::get_logger("CheckValNode"),"%d %d",val_desire,my_val);
         if(my_val == val_desire)
         return BT::NodeStatus::SUCCESS;

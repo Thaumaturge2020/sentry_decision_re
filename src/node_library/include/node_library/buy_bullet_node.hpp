@@ -35,8 +35,7 @@ namespace BehaviorTree{
                 return  
                 {
                     BT::InputPort<int>("bullet_buy_num"),
-                    BT::InputPort<geometry_msgs::msg::Point>("navigation_point"),
-                    BT::InputPort<int>("aerial_type_choose"),
+                    BT::InputPort<int>("area_id"),
                     BT::OutputPort<int>("reset_aerial_type")
                 };
             }
