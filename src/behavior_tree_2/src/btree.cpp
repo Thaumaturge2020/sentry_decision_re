@@ -74,6 +74,7 @@ int main(int argc, char * argv[]){
     factory.registerNodeType<BehaviorTree::StayOriNode>("StayOriNode");
     factory.registerNodeType<BehaviorTree::Judgenemy>("Judgenemy");
     factory.registerNodeType<BehaviorTree::ResurrectionNode>("ResurrectionNode");
+    factory.registerNodeType<BehaviorTree::PriorityOnlyNode>("PriorityOnlyNode");
     // factory.registerNodeType<BehaviorTree::GetOpbloodNode>("GetOpbloodNode");
     // factory.registerNodeType<BehaviorTree::Judgenmey_0_0>("Judgenmey_0_0");
     // factory.registerNodeType<BehaviorTree::judgeoutpost>("judgeoutpost");

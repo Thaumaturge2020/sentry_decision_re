@@ -8,7 +8,7 @@ namespace BehaviorTree{
                     std::stringstream ss;
                     ss << "nav_to_specific_place";
                     node1 = rclcpp::Node::make_shared(ss.str().c_str());                    
-                    publisher_velocity_cmd = node1->create_publisher<robot_msgs::msg::WalkCmd>("decision2pathplan",10);
+                    publisher_velocity_cmd = node1->create_publisher<robot_msgs::msg::WalkCmd>("decision2transplan",10);
                     publisher_test_cmd = node1->create_publisher<std_msgs::msg::Int16>("test_cmd",10);
                     flag = 0;
                 }
@@ -20,8 +20,8 @@ namespace BehaviorTree{
             robot_msgs::msg::WalkCmd my_cmd;
             my_cmd.pos = target_place;
             my_cmd.opt = 2;
-            my_cmd.radium = 360.0;
-            my_cmd.velocity = 2500.0;
+            my_cmd.radium = 30.0;
+            my_cmd.velocity = 3500.0;
             //RCLCPP_INFO(rclcpp::get_logger("nav_to_specific_place"),"GET TICKED");
             publisher_velocity_cmd->publish(my_cmd);
             std_msgs::msg::Int16 test_cmd;

@@ -10,7 +10,7 @@ namespace BehaviorTree{
                     node = rclcpp::Node::make_shared("subscriber_if_rebirth_blood");  
                     subscription_postion = node->create_subscription<nav_msgs::msg::Odometry>("Odometry_Vehicle",10,std::bind(&RebirthDecision1::message_callback_position,this,std::placeholders::_1));
                     subscription_blood = node->create_subscription<std_msgs::msg::Int32>("my_sentry_blood",10,std::bind(&RebirthDecision1::message_callback_blood,this,std::placeholders::_1));
-                    publisher_point = node->create_publisher<geometry_msgs::msg::Point>("decision2pathplan",10);
+                    publisher_point = node->create_publisher<geometry_msgs::msg::Point>("decision2transplan",10);
                     subscription_friend_position = node->create_subscription<robot_msgs::msg::AutoaimInfo>("autoaim2decision",10,std::bind(&RebirthDecision1::message_callback_friend_position,this,std::placeholders::_1));
                     const auto map_file = toml::parse(ROOT "config/battle_information.toml");
                     position = toml::find<std::vector<std::vector<std::pair<double,double> > > >(map_file,"navigation_POS");

@@ -15,6 +15,7 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include "decision_utils/id_mapping.hpp"
+#include "decision_utils/string_parser.hpp"
 
 namespace BehaviorTree{
     class GimbalChooseBuildingNode:public BT::SyncActionNode{
@@ -37,6 +38,8 @@ namespace BehaviorTree{
             std::vector<robot_msgs::msg::RobotInfo> enemy_pos;
             std::vector<std::vector<double> > building_pos;
 
+            std::vector<int> priority_input_arr,priority_type_arr;
+
             std::pair<double,double> self_start_point,My_pos;
             
             int autoaim_able;
@@ -49,7 +52,9 @@ namespace BehaviorTree{
             static BT::PortsList providedPorts(){
                 return {
                     BT::InputPort<int>("id"),
-                    BT::InputPort<int>("shooting_speed")
+                    BT::InputPort<int>("shooting_speed"),
+                    BT::InputPort<std::string >("priority_level_arr"),
+                    BT::InputPort<std::string >("priority_type_arr"),
                 };
             }
             BT::NodeStatus tick() override;

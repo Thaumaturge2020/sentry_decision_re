@@ -24,7 +24,7 @@ BT::NodeStatus BehaviorTree::TimeBegin:: tick(){
     getInput<int>("true_or_false",true_or_false);
     auto FAILURE = BT::NodeStatus::FAILURE, SUCCESS = BT::NodeStatus::SUCCESS;
     if(true_or_false == 0) std::swap(FAILURE,SUCCESS);
-    // RCLCPP_INFO(rclcpp::get_logger("TimeBegin"),"time_stamp:%d , return : %d",time_stamp,FAILURE == BT::NodeStatus::FAILURE ? 0 : 1);
+    //RCLCPP_INFO(rclcpp::get_logger("TimeBegin"),"time_stamp:%d , return : %d",time_stamp,FAILURE == BT::NodeStatus::FAILURE ? 0 : 1);
     if(time_stamp <= 0 || time_stamp > 420) return FAILURE;
     static int flag = 0;
     if(flag == 0){

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4"
+      main_tree_to_execute="tree1">
+  <BehaviorTree ID="Navigation">
+    <Sequence>
+      <Patrol3Node area_choose="{area_choose}"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit="7.0"/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="resurrection_decision">
+    <Sequence>
+      <Patrol3Node area_choose="4"
+                   time_begin="0"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit="1.0"
+                   time_limit="5.0"/>
+      <ResurrectionNode navigation_point="{now_navigation_point}"/>
+      <Patrol2Node distance_limit_min="1.0"
+                   now_navigation_point="{now_navigation_point}"
+                   navigation_point="{now_navigation_point}"
+                   distance_limit_max="2.0"/>
+      <NavToSpecificPlace target_place="{now_navigation_point}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="sub_decision">
+    <Sequence>
+      <ParamNode1 decision_type="{decision_type}"
+                  my_outpost_blood_lowerbound="{my_outpost_blood_lowerbound}"
+                  my_outpost_blood_upperbound="{my_outpost_blood_upperbound}"
+                  enemy_outpost_blood_lowerbound="{enemy_outpost_blood_lowerbound}"
+                  enemy_outpost_blood_upperbound="{enemy_outpost_blood_upperbound}"
+                  area_choose="{area_choose}"
+                  chase_distance_able="{chase_distance_able}"
+                  chase_distance_limit="{chase_distance_limit}"
+                  priority_input="{priority_input}"
+                  gimbal_choose_enemy_priority_input="{gimbal_choose_enemy_priority_input}"/>
+      <Judgenemy my_outpost_blood_lowerbound="{my_outpost_blood_lowerbound}"
+                 my_outpost_blood_upperbound="{my_outpost_blood_upperbound}"
+                 enemy_outpost_blood_lowerbound="{enemy_outpost_blood_lowerbound}"
+                 enemy_outpost_blood_upperbound="{enemy_outpost_blood_upperbound}"/>
+      <Fallback>
+        <Sequence>
+          <DecideEnemy target_enemy_id="{target_enemy_id}"
+                       chase_or_not="{chase_or_not}"
+                       priority_input="{priority_input}"
+                       chase_distance_limit="{chase_distance_limit}"
+                       chase_distance_able="{chase_distance_able}"
+                       priority_output="{priority_output}"/>
+          <GimbalChooseEnemyNode now_enemy_id="{target_enemy_id}"
+                                 priority_input="{priority_output}"
+                                 priority_type="{gimbal_choose_enemy_priority_input}"/>
+          <NavToEnemy now_enemy_id="{target_enemy_id}"/>
+        </Sequence>
+        <SubTree ID="Navigation"
+                 area_choose="{area_choose}"/>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="tree1">
+    <Fallback>
+      <TimeBegin time_during="{time_during}"
+                 true_or_false="0"/>
+      <SubTree ID="resurrection_decision"/>
+      <Sequence>
+        <Fallback>
+          <Judgenemy my_outpost_blood_lowerbound="501"
+                     my_outpost_blood_upperbound="1500"
+                     enemy_outpost_blood_lowerbound="0"
+                     enemy_outpost_blood_upperbound="1500"/>
+          <Judgenemy my_outpost_blood_lowerbound="0"
+                     my_outpost_blood_upperbound="500"
+                     enemy_outpost_blood_lowerbound="0"
+                     enemy_outpost_blood_upperbound="600"/>
+        </Fallback>
+        <GimbalChooseBuildingNode id="108"
+                                  shooting_speed="3.0"/>
+        <SubTree ID="Navigation"
+                 area_choose="2"/>
+      </Sequence>
+      <Fallback>
+        <SubTree ID="sub_decision"
+                 decision_type="0"
+                 _autoremap="true"/>
+        <SubTree ID="sub_decision"
+                 decision_type="1"
+                 _autoremap="true"/>
+        <SubTree ID="sub_decision"
+                 decision_type="2"
+                 _autoremap="true"/>
+        <SubTree ID="sub_decision"
+                 decision_type="3"
+                 _autoremap="true"/>
+      </Fallback>
+    </Fallback>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="DecideEnemy"
+            editable="true">
+      <output_port name="target_enemy_id"/>
+      <output_port name="chase_or_not"/>
+      <input_port name="priority_input"/>
+      <input_port name="chase_distance_limit"/>
+      <input_port name="chase_distance_able"/>
+      <output_port name="priority_output"/>
+    </Action>
+    <Action ID="GimbalChooseBuildingNode"
+            editable="true">
+      <input_port name="id"/>
+      <input_port name="shooting_speed"/>
+    </Action>
+    <Action ID="GimbalChooseEnemyNode"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+      <input_port name="priority_input"/>
+      <input_port name="priority_type"/>
+    </Action>
+    <Action ID="Judgenemy"
+            editable="true">
+      <input_port name="my_outpost_blood_lowerbound"/>
+      <input_port name="my_outpost_blood_upperbound"/>
+      <input_port name="enemy_outpost_blood_lowerbound"/>
+      <input_port name="enemy_outpost_blood_upperbound"/>
+    </Action>
+    <Action ID="NavToEnemy"
+            editable="true">
+      <input_port name="now_enemy_id"/>
+    </Action>
+    <Action ID="NavToSpecificPlace"
+            editable="true">
+      <input_port name="target_place"/>
+    </Action>
+    <Action ID="ParamNode1"
+            editable="true">
+      <input_port name="decision_type"/>
+      <output_port name="my_outpost_blood_lowerbound"/>
+      <output_port name="my_outpost_blood_upperbound"/>
+      <output_port name="enemy_outpost_blood_lowerbound"/>
+      <output_port name="enemy_outpost_blood_upperbound"/>
+      <output_port name="area_choose"/>
+      <output_port name="chase_distance_able"/>
+      <output_port name="chase_distance_limit"/>
+      <output_port name="priority_input"/>
+      <output_port name="gimbal_choose_enemy_priority_input"/>
+    </Action>
+    <Action ID="Patrol2Node"
+            editable="true">
+      <input_port name="distance_limit_min"/>
+      <output_port name="now_navigation_point"/>
+      <input_port name="navigation_point"/>
+      <input_port name="distance_limit_max"/>
+    </Action>
+    <Action ID="Patrol3Node"
+            editable="true">
+      <inout_port name="area_choose"/>
+      <input_port name="time_begin"/>
+      <output_port name="navigation_point"/>
+      <input_port name="distance_limit"/>
+      <input_port name="time_limit"/>
+    </Action>
+    <Action ID="ResurrectionNode"
+            editable="true">
+      <input_port name="navigation_point"/>
+    </Action>
+    <Action ID="TimeBegin"
+            editable="true">
+      <output_port name="time_during"/>
+      <input_port name="true_or_false"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

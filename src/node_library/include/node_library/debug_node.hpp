@@ -16,7 +16,8 @@ namespace BehaviorTree{
             rclcpp::Time ti;
             static BT::PortsList providedPorts(){
                 return{
-                    BT::InputPort<int>("debug_output_id")
+                    BT::InputPort<int>("debug_output_id"),
+                    BT::InputPort<int>("true_or_false"),
                 };
             }
             BT::NodeStatus tick() override;

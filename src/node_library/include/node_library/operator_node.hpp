@@ -8,6 +8,8 @@
 #include "robot_msgs/msg/aerial_commands.hpp"
 #include "geometry_msgs/msg/point.hpp"
 #include "decision_utils/id_mapping.hpp"
+#include <Eigen/Dense>
+#include <Eigen/Core>
 
 namespace BehaviorTree{
     class OperatorNode:public BT::SyncActionNode{
@@ -20,6 +22,7 @@ namespace BehaviorTree{
             OperatorNode(const std::string&name, const BT::NodeConfig& config);
             void message_callback_operator_cmd(const robot_msgs::msg::AerialCommands &msg);
             int target_enemy;
+            Eigen::Matrix3d trans;
             static BT::PortsList providedPorts(){
                 return {
                     BT::OutputPort<int>("expected_operator_mode"),

@@ -11,7 +11,7 @@ namespace BehaviorTree
         std::stringstream ss;
         ss << "nav_to_building_node";
         node1 = rclcpp::Node::make_shared(ss.str().c_str());
-        publisher_pos = node1->create_publisher<robot_msgs::msg::WalkCmd>("/decision2pathplan", 10);
+        publisher_pos = node1->create_publisher<robot_msgs::msg::WalkCmd>("/decision2transplan", 10);
         building_pos = toml::find<std::vector<std::vector<double>>>(map_data,"building_pos");
     }
     
@@ -35,8 +35,8 @@ namespace BehaviorTree
         robot_msgs::msg::WalkCmd my_cmd;
         my_cmd.pos = pos;
         my_cmd.opt = 2;
-        my_cmd.radium = 360.0;
-        my_cmd.velocity = 2500.0;
+        my_cmd.radium = 0.0;
+        my_cmd.velocity = 3500.0;
         publisher_pos->publish(my_cmd);
         RCLCPP_INFO(rclcpp::get_logger("navigation_building_node"), "I'm published,the x is %f,the y is %f,the z is %f\n",pos.x,pos.y,pos.z);
         return BT::NodeStatus::SUCCESS;

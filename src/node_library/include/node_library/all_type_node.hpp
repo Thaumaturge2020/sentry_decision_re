@@ -42,4 +42,5 @@
 #include "node_library/resurrection_node.hpp"
 #include "node_library/buy_bullet_node.hpp"
 #include "node_library/debug_node.hpp"
+#include "node_library/priority_only_node.hpp"
 #endif

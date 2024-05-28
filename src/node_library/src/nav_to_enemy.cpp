@@ -10,7 +10,7 @@ namespace BehaviorTree{
                     node1 = rclcpp::Node::make_shared(ss.str().c_str());   
                     subscription_enemy_pos = node1->create_subscription<robot_msgs::msg::AutoaimInfo>("autoaim2decision",10,std::bind(&NavToEnemy::message_callback_enemy_pos,this,std::placeholders::_1));
                     my_pos = node1->create_subscription<nav_msgs::msg::Odometry>("/Odometry_Vehicle",10,std::bind(&NavToEnemy::message_callback_my_pos,this,std::placeholders::_1));
-                    decision_pos = node1->create_publisher<robot_msgs::msg::WalkCmd>("decision2pathplan", 10);
+                    decision_pos = node1->create_publisher<robot_msgs::msg::WalkCmd>("decision2transplan", 10);
                     const auto toml_file = toml::parse(ROOT "config/battle_information.toml");
                     self_start_point = toml::find<std::pair<double,double> >(toml_file,"self_position");
                     time_interval = 1;

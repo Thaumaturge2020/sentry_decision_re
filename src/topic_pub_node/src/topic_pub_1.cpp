@@ -49,6 +49,9 @@ namespace topic_pub_node_1 {
             if(data3.cmd_keyboard == 0)
             data3.target_robot_id = 2;
 
+            data3.target_position_x = toml::find<double>(toml_file,"target_position_x");
+            data3.target_position_y = toml::find<double>(toml_file,"target_position_y");
+
             double start_pos_x = 2.898,start_pos_y = 3.353;
             
             msg.data = 2;

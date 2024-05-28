@@ -125,15 +125,47 @@ namespace BehaviorTree
         pub_msg.priority_level_arr = empty_arr;
         pub_msg.priority_type_arr.resize(8);
         pub_msg.priority_level_arr.resize(8);
-        for(int i=0;i<8;++i) pub_msg.priority_type_arr[i] = 1;
+
+        {
+            std::vector<int> priority_type_arr;
+            std::string priority_type_str;
+            if(!getInput<std::string >("priority_type_arr",priority_type_str)){
+                // RCLCPP_INFO(rclcpp::get_logger("empty echo"),"empty_logger");
+                for(int i=0;i<8;++i) pub_msg.priority_type_arr[i] = 1;
+            }
+            else{
+                priority_type_arr = decision_utils::string_parser::GetIntArray(priority_type_str);
+                // RCLCPP_INFO(rclcpp::get_logger("empty echo"),"priority_type_arr:%d",priority_type_arr.size());
+                if(priority_type_arr.empty()) {for(int i=0;i<8;++i) pub_msg.priority_type_arr[i] = 1;}
+                else {for(int i=0;i<8;++i) pub_msg.priority_type_arr[i] = (unsigned char)priority_type_arr[i];}
+            }
+        }
         
-        if(building_id%100 != 1)
+
+                // RCLCPP_INFO(rclcpp::get_logger("empty echo"),"priority_type_arr:%d",decision_utils::id_mapping::autoaim2priority(building_id%100));
+
         pub_msg.priority_type_arr[decision_utils::id_mapping::autoaim2priority(building_id%100)] = 0;
+
+        {
+            std::vector<int> priority_level_arr;
+            std::string priority_level_str;
+            if(!getInput<std::string >("priority_level_arr",priority_level_str)){
+                // RCLCPP_INFO(rclcpp::get_logger("empty echo"),"empty_logger");
+                for(int i=0;i<8;++i) pub_msg.priority_level_arr[i] = 1;
+            }
+            else{
+                priority_level_arr = decision_utils::string_parser::GetIntArray(priority_level_str);
+                if(priority_level_arr.empty()) {for(int i=0;i<8;++i) pub_msg.priority_level_arr[i] = 1;}
+                else {for(int i=0;i<8;++i) pub_msg.priority_level_arr[i] = (unsigned char)priority_level_arr[i];}
+            }
+        }
+
+
+                // RCLCPP_INFO(rclcpp::get_logger("empty echo"),"empty_logger 1 %d",pub_msg.priority_level_arr.size());
         
-        for(int i=0;i<8;++i) pub_msg.priority_level_arr[i] = 1;
-        
-        if(building_id%100 != 1)
         pub_msg.priority_level_arr[decision_utils::id_mapping::autoaim2priority(building_id%100)] = 8;
+
+                // RCLCPP_INFO(rclcpp::get_logger("empty echo"),"empty_logger 2 %d",pub_msg.priority_level_arr.size());
 
         // pub_msg.enemy_id = building_id;
         pub_msg.yaw = azimuth;

@@ -18,10 +18,16 @@
 
   <BehaviorTree ID="tree3">
     <Sequence>
-      <TimeBegin time_during="{time_during}"
-                 true_or_false="1"/>
-      <SetValOnceNode val_port="{val_port}"
-                      val_set="3"/>
+      <Fallback>
+        <TimeBegin time_during="{time_during}"
+                   true_or_false="1"/>
+        <Sequence>
+          <StayOriNode now_navigation_point="{navigation_point}"/>
+          <NavToSpecificPlace target_place="{navigation_point}"/>
+          <TimeBegin time_during="{time_during}"
+                     true_or_false="1"/>
+        </Sequence>
+      </Fallback>
       <Fallback>
         <Sequence>
           <Fallback>
@@ -34,8 +40,11 @@
                        enemy_outpost_blood_lowerbound="0"
                        enemy_outpost_blood_upperbound="0"/>
           </Fallback>
+          <PriorityOnlyNode autoaim_mode="1"
+                            priority_level="1_1_1_1_1_1_1_1"
+                            priority_type="1_1_1_1_1_1_2_1"/>
           <SubTree ID="Navigation"
-                   area_choose="0"
+                   area_choose="3"
                    _autoremap="false"/>
         </Sequence>
         <Sequence>
@@ -43,7 +52,9 @@
                    area_choose="2"
                    _autoremap="false"/>
           <GimbalChooseBuildingNode id="108"
-                                    shooting_speed="0"/>
+                                    shooting_speed="0"
+                                    priority_type_arr="1_2_1_1_1_1_1_1"
+                                    priority_level_arr=""/>
         </Sequence>
       </Fallback>
     </Sequence>
@@ -55,6 +66,8 @@
             editable="true">
       <input_port name="id"/>
       <input_port name="shooting_speed"/>
+      <input_port name="priority_type_arr"/>
+      <input_port name="priority_level_arr"/>
     </Action>
     <Action ID="Judgenemy"
             editable="true">
@@ -82,10 +95,15 @@
       <input_port name="distance_limit"/>
       <input_port name="time_limit"/>
     </Action>
-    <Action ID="SetValOnceNode"
+    <Action ID="PriorityOnlyNode"
             editable="true">
-      <output_port name="val_port"/>
-      <input_port name="val_set"/>
+      <input_port name="autoaim_mode"/>
+      <input_port name="priority_level"/>
+      <input_port name="priority_type"/>
+    </Action>
+    <Action ID="StayOriNode"
+            editable="true">
+      <output_port name="now_navigation_point"/>
     </Action>
     <Action ID="TimeBegin"
             editable="true">

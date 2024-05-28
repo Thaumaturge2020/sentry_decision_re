@@ -45,7 +45,9 @@
           <CheckValNode val_desire="0"
                         val_port="{aerial_type_choose}"/>
           <GimbalChooseBuildingNode id="101"
-                                    shooting_speed="3"/>
+                                    shooting_speed="3"
+                                    priority_type_arr=""
+                                    priority_level_arr=""/>
           <SubTree ID="Navigation"
                    area_choose="7"/>
         </Sequence>
@@ -87,7 +89,9 @@
           <CheckValNode val_desire="6"
                         val_port="{aerial_type_choose}"/>
           <GimbalChooseBuildingNode id="109"
-                                    shooting_speed="3"/>
+                                    shooting_speed="3"
+                                    priority_type_arr=""
+                                    priority_level_arr=""/>
           <SubTree ID="Navigation"
                    area_choose="3"/>
         </Sequence>
@@ -183,14 +187,20 @@
 
   <BehaviorTree ID="tree1">
     <Fallback>
-      <TimeBegin time_during="{time_during}"
-                 true_or_false="0"/>
+      <Fallback>
+        <TimeBegin time_during="{time_during}"
+                   true_or_false="1"/>
+        <Sequence>
+          <StayOriNode now_navigation_point="{navigation_point}"/>
+          <NavToSpecificPlace target_place="{navigation_point}"/>
+          <TimeBegin time_during="{time_during}"
+                     true_or_false="1"/>
+        </Sequence>
+      </Fallback>
       <Sequence>
-        <Debugnode debug_output_id="1024"/>
         <SubTree ID="resurrection_decision"/>
       </Sequence>
       <Sequence>
-        <Debugnode debug_output_id="2245"/>
         <SubTree ID="aerial_operator_decision"
                  _autoremap="false"/>
       </Sequence>
@@ -219,7 +229,9 @@
                                    priority_input_str=""/>
           </Sequence>
           <GimbalChooseBuildingNode id="108"
-                                    shooting_speed="3.0"/>
+                                    shooting_speed="3.0"
+                                    priority_type_arr=""
+                                    priority_level_arr=""/>
         </Fallback>
         <SubTree ID="Navigation"
                  area_choose="2"/>
@@ -364,6 +376,8 @@
             editable="true">
       <input_port name="id"/>
       <input_port name="shooting_speed"/>
+      <input_port name="priority_type_arr"/>
+      <input_port name="priority_level_arr"/>
     </Action>
     <Action ID="GimbalChooseEnemyNode"
             editable="true">
@@ -445,7 +459,11 @@
     <Action ID="SetValOnceNode"
             editable="true">
       <input_port name="val_set"/>
-      <input_port name="val_port"/>
+      <output_port name="val_port"/>
+    </Action>
+    <Action ID="StayOriNode"
+            editable="true">
+      <output_port name="now_navigation_point"/>
     </Action>
     <Action ID="TimeBegin"
             editable="true">

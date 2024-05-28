@@ -10,7 +10,15 @@
 #include "robot_msgs/msg/referee_data.hpp"
 #include "robot_msgs/msg/build_state.hpp"
 #include "robot_msgs/msg/cam_command.hpp"
+#include "robot_msgs/msg/decision_points.hpp"
 #include "rm_interfaces/msg/perception.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+
+#include "robot_msgs/msg/walk_cmd.hpp"
+#include "Eigen/Dense"
+#include "Eigen/Core"
+#include "toml.hpp"
+#include "geometry_msgs/msg/wrench_stamped.hpp"
 
 
 using namespace std::chrono_literals;
@@ -33,6 +41,8 @@ namespace topic_transimit_node {
         rclcpp::Publisher<robot_msgs::msg::BuildState>::SharedPtr publisher_my_outpost_blood;
         rclcpp::Publisher<robot_msgs::msg::BuildState>::SharedPtr publisher_enemy_outpost_blood;
         rclcpp::Publisher<robot_msgs::msg::CamCommand>::SharedPtr publisher_10;
+        rclcpp::Publisher<robot_msgs::msg::DecisionPoints>::SharedPtr publisher_11;
+        rclcpp::Publisher<robot_msgs::msg::WalkCmd>::SharedPtr publisher_12;
 
         rclcpp::Subscription<robot_msgs::msg::GimbalData>::SharedPtr subscription_1;
         rclcpp::Subscription<robot_msgs::msg::RefereeData>::SharedPtr subscription_2;
@@ -41,6 +51,11 @@ namespace topic_transimit_node {
         rclcpp::Subscription<rm_interfaces::msg::Perception>::SharedPtr subscription_perception_2;
         rclcpp::Subscription<rm_interfaces::msg::Perception>::SharedPtr subscription_perception_3;
         rclcpp::Subscription<rm_interfaces::msg::Perception>::SharedPtr subscription_perception_4;
+        rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscription_pose_stamped;
+        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_odometry;
+        rclcpp::Subscription<robot_msgs::msg::WalkCmd>::SharedPtr subscription_goal;
+        rclcpp::Subscription<geometry_msgs::msg::WrenchStamped>::SharedPtr subscription_vel;
+
 
         rclcpp::Subscription<robot_msgs::msg::CamCommand>::SharedPtr subscription_enemy_pos;
 
@@ -54,6 +69,16 @@ namespace topic_transimit_node {
         int spin_flag;
 
         int ally_sentry_invicinble,enemy_sentry_invicinble;
+
+        double sentry_pub_omiga;
+
+        geometry_msgs::msg::Point goal_position,now_position,next_position;
+
+        Eigen::Matrix3d trans;
+
+        double sentry_vel;
+
+        
         
         TopicTransmitter(const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
                 : Node("TopicTransmitter"),
@@ -67,18 +92,31 @@ namespace topic_transimit_node {
                   publisher_7 = this->create_publisher<std_msgs::msg::Int32>("/EC2DSbase", 10);
                   publisher_8 = this->create_publisher<std_msgs::msg::Int32>("/bullet_number", 10);
                   publisher_9 = this->create_publisher<std_msgs::msg::Int32>("/ECBaseAngle",10);
-                  publisher_10 = this->create_publisher<robot_msgs::msg::CamCommand>("/transmit2autoaim",10);
+                  publisher_10 = this->create_publisher<robot_msgs::msg::CamCommand>("/decision2autoaim",10);
+                  publisher_11 = this->create_publisher<robot_msgs::msg::DecisionPoints>("/easy_robot_commands/decision_points",10);
+                  publisher_12 = this->create_publisher<robot_msgs::msg::WalkCmd>("/decision2pathplan",10);
                   publisher_spin = this->create_publisher<std_msgs::msg::Int32>("/decision2ECbasespin",10);
                   publisher_my_outpost_blood = this->create_publisher<robot_msgs::msg::BuildState>("my_outpost_blood", 10);
                   publisher_enemy_outpost_blood = this->create_publisher<robot_msgs::msg::BuildState>("enemy_outpost_blood", 10);
                   publisher_my_sentry_blood = this->create_publisher<std_msgs::msg::Int32>("my_sentry_blood", 10);
                   publisher_enemy_sentry_blood = this->create_publisher<std_msgs::msg::Int32>("enemy_sentry_blood", 10);
 
+                  sentry_vel = 0;
+                  sentry_pub_omiga = 0;
+
+                  const auto toml_file = toml::parse(ROOT "config/battle_information.toml");
+                  std::array<std::array<double,3>,3> trans_matrix = toml::find<std::array<std::array<double,3>,3> > (toml_file,"trans_matrix");
+                  for(int i=0;i<3;++i) for(int j=0;j<3;++j) trans(i,j) = trans_matrix[i][j];
+
+                  trans = trans.inverse().eval();
+
                   subscription_perception_1 = this->create_subscription<rm_interfaces::msg::Perception>("/detection_1/detection_armor_enemy", 10, std::bind(&TopicTransmitter::subscription_Perception_1, this, std::placeholders::_1));
                   subscription_perception_2 = this->create_subscription<rm_interfaces::msg::Perception>("/detection_2/detection_armor_enemy", 10, std::bind(&TopicTransmitter::subscription_Perception_2, this, std::placeholders::_1));
                   subscription_perception_3 = this->create_subscription<rm_interfaces::msg::Perception>("/detection_3/detection_armor_enemy", 10, std::bind(&TopicTransmitter::subscription_Perception_3, this, std::placeholders::_1));
                   subscription_perception_4 = this->create_subscription<rm_interfaces::msg::Perception>("/detection_4/detection_armor_enemy", 10, std::bind(&TopicTransmitter::subscription_Perception_4, this, std::placeholders::_1));
-                  
+                  subscription_odometry = this->create_subscription<nav_msgs::msg::Odometry>("/Odometry_Vehicle",10,[this](const nav_msgs::msg::Odometry &msg){
+                    now_position = msg.pose.pose.position;
+                  });
                 
                   subscription_enemy_pos = this->create_subscription<robot_msgs::msg::CamCommand>("/decision2transmit", 10, [this](const robot_msgs::msg::CamCommand &rec_msg){
                     robot_msgs::msg::CamCommand msg = rec_msg;
@@ -88,9 +126,44 @@ namespace topic_transimit_node {
                     publisher_10->publish(msg);
                   });
 
+                  subscription_pose_stamped = this->create_subscription<geometry_msgs::msg::PoseStamped>("/goal_pose",10,[this](const geometry_msgs::msg::PoseStamped &msg){
+                    next_position = msg.pose.position;
+                  });
+
+                  subscription_goal = this->create_subscription<robot_msgs::msg::WalkCmd>("/decision2transplan",10,[this](const robot_msgs::msg::WalkCmd &msg){
+                    goal_position = msg.pos;
+                    robot_msgs::msg::DecisionPoints pub_msg;
+                    robot_msgs::msg::WalkCmd walk_msg = msg;
+                    pub_msg.intention = 3;
+                    Eigen::Vector3d now_position_vec = trans*Eigen::Vector3d(now_position.x,now_position.y,now_position.z);
+                    Eigen::Vector3d next_position_vec = trans*Eigen::Vector3d(next_position.x,next_position.y,next_position.z);
+                    Eigen::Vector3d goal_position_vec = trans*Eigen::Vector3d(goal_position.x,goal_position.y,goal_position.z);
+                    geometry_msgs::msg::Point now_position_2,next_position_2,goal_position_2;
+                    now_position_2.x = now_position_vec[0],now_position_2.y = now_position_vec[1],now_position_2.z = now_position_vec[2];
+                    next_position_2.x = next_position_vec[0],next_position_2.y = next_position_vec[1],next_position_2.z = next_position_vec[2];
+                    goal_position_2.x = goal_position_vec[0],goal_position_2.y = goal_position_vec[1],goal_position_2.z = goal_position_vec[2];
+                    
+                    pub_msg.start = now_position_2;
+                    pub_msg.point1 = next_position_2;
+                    pub_msg.point2 = goal_position_2;
+                    publisher_11->publish(pub_msg);
+
+                    walk_msg.radium = sentry_pub_omiga;
+                    publisher_12->publish(walk_msg);
+                  });
+
                   subscription_1 = this->create_subscription<robot_msgs::msg::GimbalData>("/easy_robot_commands/offset_data",10,std::bind(&TopicTransmitter::subscription_Gimbal_Data,this,std::placeholders::_1));
                   subscription_2 = this->create_subscription<robot_msgs::msg::RefereeData>("/easy_robot_commands/referee_data_for_decision",10,std::bind(&TopicTransmitter::subscription_Referee_Data,this,std::placeholders::_1));
                   subscription_spin = this->create_subscription<std_msgs::msg::Int32>("/decision2ECbasespin",10,std::bind(&TopicTransmitter::subscription_Spin_Data,this,std::placeholders::_1));
+
+                  subscription_vel = this->create_subscription<geometry_msgs::msg::WrenchStamped>("/cmd_vel",10,[this](const geometry_msgs::msg::WrenchStamped &msg){
+                    sentry_vel = sqrt((msg.wrench.force.x*msg.wrench.force.x)+(msg.wrench.force.y*msg.wrench.force.y));
+                    if(game_time_msg.data > 0 && game_time_msg.data <= 420)
+                    sentry_pub_omiga = 540 / (sentry_vel/100 + 1);
+                    else
+                    sentry_pub_omiga = 0;
+                  });
+                  
                   spin_flag = -1;
                   enemy_sentry_invicinble = 1;
                   ally_sentry_invicinble = 1;
