@@ -64,8 +64,7 @@
         <Sequence>
           <CheckValNode val_desire="3"
                         val_port="{aerial_type_choose}"/>
-          <SubTree ID="tree_patrol_decision"
-                   patrol_decision_val="4"/>
+          <SubTree ID="tree_patrol_decision"/>
         </Sequence>
         <Sequence>
           <CheckValNode val_desire="4"
@@ -94,6 +93,17 @@
                                     priority_level_arr=""/>
           <SubTree ID="Navigation"
                    area_choose="3"/>
+        </Sequence>
+        <Sequence>
+          <SpinOnceNode aerial_type="{aerial_type_choose}"
+                        reset_aerial_type="{aerial_type_choose}"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="8"
+                        val_port="{aerial_type_choose}"/>
+          <SubTree ID="RandomNavigation"
+                   area_id="0"
+                   random_gen_limit="3"/>
         </Sequence>
       </Fallback>
     </Sequence>
@@ -262,81 +272,85 @@
                    _autoremap="true"/>
           <Debugnode debug_output_id="33"/>
         </Sequence>
+        <SubTree ID="tree_patrol_decision"/>
       </Fallback>
     </Fallback>
   </BehaviorTree>
 
   <BehaviorTree ID="tree_patrol_decision">
-    <Fallback>
-      <Sequence>
-        <CheckValNode val_desire="1"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="RandomNavigation"
-                 area_id="0"
-                 random_gen_limit="3"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="2"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="patrol_subtree_decision"
-                 strategy="{strategy_1}"
-                 first_choose_id="0"
-                 _autoremap="false"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="3"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="RandomNavigation"
-                 area_id="1"
-                 random_gen_limit="3"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="4"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="patrol_subtree_decision"
-                 strategy="{strategy_2}"
-                 first_choose_id="1"
-                 _autoremap="false"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="5"
-                      val_port="{patrol_decision_val}"/>
-        <Fallback>
-          <Sequence>
-            <TimeCompuLimit time_limit1="30"
-                            time_limit2="30"
-                            first_interval="0"
-                            time_switch="1"/>
-            <SubTree ID="RandomNavigation"
-                     area_id="0"/>
-          </Sequence>
+    <Sequence>
+      <PatrolAreaNode val_port="{patrol_decision_val}"/>
+      <Fallback>
+        <Sequence>
+          <CheckValNode val_desire="1"
+                        val_port="{patrol_decision_val}"/>
           <SubTree ID="RandomNavigation"
-                   area_id="1"/>
-        </Fallback>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="6"
-                      val_port="{patrol_decision_val}"/>
-        <Fallback>
-          <Sequence>
-            <NavHealNode heal_navigation_point="{now_navigation_point}"
-                         interval_0="160"
-                         interval_1="400"/>
-            <NavToSpecificPlace target_place="{now_navigation_point}"/>
-          </Sequence>
-          <Sequence>
-            <TimeCompuLimit time_limit1="30"
-                            time_limit2="30"
-                            first_interval="0"
-                            time_switch="1"/>
-            <SubTree ID="RandomNavigation"
-                     area_id="0"/>
-          </Sequence>
+                   area_id="0"
+                   random_gen_limit="3"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="2"
+                        val_port="{patrol_decision_val}"/>
+          <SubTree ID="patrol_subtree_decision"
+                   strategy="{strategy_1}"
+                   first_choose_id="0"
+                   _autoremap="false"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="3"
+                        val_port="{patrol_decision_val}"/>
           <SubTree ID="RandomNavigation"
-                   area_id="1"/>
-        </Fallback>
-      </Sequence>
-    </Fallback>
+                   area_id="1"
+                   random_gen_limit="3"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="4"
+                        val_port="{patrol_decision_val}"/>
+          <SubTree ID="patrol_subtree_decision"
+                   strategy="{strategy_2}"
+                   first_choose_id="1"
+                   _autoremap="false"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="5"
+                        val_port="{patrol_decision_val}"/>
+          <Fallback>
+            <Sequence>
+              <TimeCompuLimit time_limit1="30"
+                              time_limit2="30"
+                              first_interval="0"
+                              time_switch="1"/>
+              <SubTree ID="RandomNavigation"
+                       area_id="0"/>
+            </Sequence>
+            <SubTree ID="RandomNavigation"
+                     area_id="1"/>
+          </Fallback>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="6"
+                        val_port="{patrol_decision_val}"/>
+          <Fallback>
+            <Sequence>
+              <NavHealNode heal_navigation_point="{now_navigation_point}"
+                           interval_0="160"
+                           interval_1="400"/>
+              <NavToSpecificPlace target_place="{now_navigation_point}"/>
+            </Sequence>
+            <Sequence>
+              <TimeCompuLimit time_limit1="30"
+                              time_limit2="30"
+                              first_interval="0"
+                              time_switch="1"/>
+              <SubTree ID="RandomNavigation"
+                       area_id="0"/>
+            </Sequence>
+            <SubTree ID="RandomNavigation"
+                     area_id="1"/>
+          </Fallback>
+        </Sequence>
+      </Fallback>
+    </Sequence>
   </BehaviorTree>
 
   <!-- Description of Node Models (used by Groot) -->
@@ -344,7 +358,7 @@
     <Action ID="BuyBulletNode"
             editable="true">
       <input_port name="bullet_buy_num"/>
-      <input_port name="reset_aerial_type"/>
+      <output_port name="reset_aerial_type"/>
       <input_port name="area_id"/>
     </Action>
     <Action ID="CheckIfBloodInterval"
@@ -447,6 +461,10 @@
       <input_port name="random_gen_limit"/>
       <inout_port name="now_navigation_point"/>
     </Action>
+    <Action ID="PatrolAreaNode"
+            editable="true">
+      <output_port name="val_port"/>
+    </Action>
     <Action ID="ResurrectionNode"
             editable="true">
       <input_port name="area_choose"/>
@@ -460,6 +478,11 @@
             editable="true">
       <input_port name="val_set"/>
       <output_port name="val_port"/>
+    </Action>
+    <Action ID="SpinOnceNode"
+            editable="true">
+      <input_port name="aerial_type"/>
+      <output_port name="reset_aerial_type"/>
     </Action>
     <Action ID="StayOriNode"
             editable="true">

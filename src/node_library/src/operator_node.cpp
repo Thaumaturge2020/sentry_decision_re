@@ -29,6 +29,10 @@ namespace BehaviorTree{
                             case 'C': aerial_type = 5;break;
                             //哨兵进攻基地
                             case 'G': aerial_type = 6;break;
+                            //哨兵原地自转一秒
+                            case 'Z': aerial_type = 7;break;
+                            //哨兵上梯高
+                            case 'V': aerial_type = 8;break;
                             //取消选择
                             case 'Q': aerial_type = -1;break;
                         }

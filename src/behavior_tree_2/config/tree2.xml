@@ -45,7 +45,9 @@
           <CheckValNode val_desire="0"
                         val_port="{aerial_type_choose}"/>
           <GimbalChooseBuildingNode id="101"
-                                    shooting_speed="3"/>
+                                    shooting_speed="3"
+                                    priority_type_arr=""
+                                    priority_level_arr=""/>
           <SubTree ID="Navigation"
                    area_choose="7"/>
         </Sequence>
@@ -56,8 +58,7 @@
         <Sequence>
           <CheckValNode val_desire="2"
                         val_port="{aerial_type_choose}"/>
-          <Debugnode debug_output_id="114514"
-                     true_or_false=""/>
+          <Debugnode debug_output_id="114514"/>
           <NavToSpecificPlace target_place="{aerial_navigation_point}"/>
         </Sequence>
         <Sequence>
@@ -88,7 +89,9 @@
           <CheckValNode val_desire="6"
                         val_port="{aerial_type_choose}"/>
           <GimbalChooseBuildingNode id="109"
-                                    shooting_speed="3"/>
+                                    shooting_speed="3"
+                                    priority_type_arr=""
+                                    priority_level_arr=""/>
           <SubTree ID="Navigation"
                    area_choose="3"/>
         </Sequence>
@@ -126,8 +129,7 @@
       <SubTree ID="RandomNavigation"
                area_id="{first_choose_id}"
                random_gen_limit="3"/>
-      <Debugnode debug_output_id="898989"
-                 true_or_false=""/>
+      <Debugnode debug_output_id="898989"/>
     </Fallback>
   </BehaviorTree>
 
@@ -196,13 +198,9 @@
         </Sequence>
       </Fallback>
       <Sequence>
-        <Debugnode debug_output_id="1024"
-                   true_or_false=""/>
         <SubTree ID="resurrection_decision"/>
       </Sequence>
       <Sequence>
-        <Debugnode debug_output_id="2245"
-                   true_or_false=""/>
         <SubTree ID="aerial_operator_decision"
                  _autoremap="false"/>
       </Sequence>
@@ -218,41 +216,38 @@
                      enemy_outpost_blood_upperbound="600"/>
         </Fallback>
         <GimbalChooseBuildingNode id="108"
-                                  shooting_speed="3.0"/>
+                                  shooting_speed="3.0"
+                                  priority_type_arr=""
+                                  priority_level_arr=""/>
         <SubTree ID="Navigation"
                  area_choose="2"/>
-        <Debugnode debug_output_id="2244"
-                   true_or_false=""/>
       </Sequence>
       <Fallback>
         <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="0"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="45"
-                     true_or_false=""/>
+          <Debugnode debug_output_id="45"/>
         </Sequence>
         <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="1"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="11"
-                     true_or_false=""/>
+          <Debugnode debug_output_id="11"/>
         </Sequence>
         <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="2"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="22"
-                     true_or_false=""/>
+          <Debugnode debug_output_id="22"/>
         </Sequence>
         <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="3"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="33"
-                     true_or_false=""/>
+          <Debugnode debug_output_id="33"/>
         </Sequence>
+        <SubTree ID="tree_patrol_decision"/>
       </Fallback>
     </Fallback>
   </BehaviorTree>
@@ -335,7 +330,7 @@
     <Action ID="BuyBulletNode"
             editable="true">
       <input_port name="bullet_buy_num"/>
-      <input_port name="reset_aerial_type"/>
+      <output_port name="reset_aerial_type"/>
       <input_port name="area_id"/>
     </Action>
     <Action ID="CheckIfBloodInterval"
@@ -353,7 +348,6 @@
     <Action ID="Debugnode"
             editable="true">
       <input_port name="debug_output_id"/>
-      <input_port name="true_or_false"/>
     </Action>
     <Action ID="DecideEnemy"
             editable="true">
@@ -368,6 +362,8 @@
             editable="true">
       <input_port name="id"/>
       <input_port name="shooting_speed"/>
+      <input_port name="priority_type_arr"/>
+      <input_port name="priority_level_arr"/>
     </Action>
     <Action ID="GimbalChooseEnemyNode"
             editable="true">
