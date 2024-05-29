@@ -48,13 +48,13 @@
                    _autoremap="false"/>
         </Sequence>
         <Sequence>
-          <SubTree ID="Navigation"
-                   area_choose="2"
-                   _autoremap="false"/>
           <GimbalChooseBuildingNode id="108"
                                     shooting_speed="0"
                                     priority_type_arr="1_2_1_1_1_1_1_1"
                                     priority_level_arr=""/>
+          <SubTree ID="Navigation"
+                   area_choose="2"
+                   _autoremap="false"/>
         </Sequence>
       </Fallback>
     </Sequence>

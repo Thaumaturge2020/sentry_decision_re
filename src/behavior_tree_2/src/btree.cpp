@@ -5,10 +5,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "node_library/all_type_node.hpp"
-#include "node_library/time_compu_interval.hpp"
-#include "node_library/get_opblood_node.hpp"
-#include "node_library/judgeoutpost.hpp"
-#include "node_library/judge_enemy.hpp"
 // #include "nav2_behavior_tree/plugins/control/pipeline_sequence.hpp"
 #include <chrono>
 
@@ -65,6 +61,7 @@ int main(int argc, char * argv[]){
     factory.registerNodeType<BehaviorTree::Patrol4Node>("Patrol4Node");
     factory.registerNodeType<BehaviorTree::RadarDecision>("RadarDecision");
     factory.registerNodeType<BehaviorTree::Spin>("SpinNode");
+    factory.registerNodeType<BehaviorTree::SpinOnceNode>("SpinOnceNode");
     factory.registerNodeType<BehaviorTree::SetValNode>("SetValNode");
     factory.registerNodeType<BehaviorTree::SetValOnceNode>("SetValOnceNode");
     factory.registerNodeType<BehaviorTree::TimeBegin>("TimeBegin");
@@ -74,6 +71,8 @@ int main(int argc, char * argv[]){
     factory.registerNodeType<BehaviorTree::StayOriNode>("StayOriNode");
     factory.registerNodeType<BehaviorTree::Judgenemy>("Judgenemy");
     factory.registerNodeType<BehaviorTree::ResurrectionNode>("ResurrectionNode");
+    factory.registerNodeType<BehaviorTree::PatrolTypeNode>("PatrolTypeNode");
+    factory.registerNodeType<BehaviorTree::ResurrectionTypeNode>("ResurrectionTypeNode");
     factory.registerNodeType<BehaviorTree::PriorityOnlyNode>("PriorityOnlyNode");
     // factory.registerNodeType<BehaviorTree::GetOpbloodNode>("GetOpbloodNode");
     // factory.registerNodeType<BehaviorTree::Judgenmey_0_0>("Judgenmey_0_0");

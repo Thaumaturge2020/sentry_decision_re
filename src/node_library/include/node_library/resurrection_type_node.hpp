@@ -1,17 +1,18 @@
-#ifndef RM_SENTRY_2024_PATROL_TYPE_NODE_
-#define RM_SENTRY_2024_PATROL_TYPE_NODE_
+#ifndef RM_SENTRY_2024_RESURRECTION_TYPE_NODE_
+#define RM_SENTRY_2024_RESURRECTION_TYPE_NODE_
 
 #include <rclcpp/rclcpp.hpp>
 #include "behaviortree_cpp/bt_factory.h"
 #include "geometry_msgs/msg/point.hpp"
 #include "robot_msgs/msg/robot_blood_info.hpp"
 #include "std_msgs/msg/int32.hpp"
+#include "toml.hpp"
 
 namespace BehaviorTree{
-    class ResurrctionTypeNode:public BT::SyncActionNode{
+    class ResurrectionTypeNode:public BT::SyncActionNode{
         public:
 
-        ResurrctionTypeNode(const std::string&name, const BT::NodeConfig& config);
+        ResurrectionTypeNode(const std::string&name, const BT::NodeConfig& config);
 
         int patrol_type;
 

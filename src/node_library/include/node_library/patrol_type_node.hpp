@@ -6,6 +6,7 @@
 #include "geometry_msgs/msg/point.hpp"
 #include "robot_msgs/msg/robot_blood_info.hpp"
 #include "std_msgs/msg/int32.hpp"
+#include "toml.hpp"
 
 namespace BehaviorTree{
     class PatrolTypeNode:public BT::SyncActionNode{

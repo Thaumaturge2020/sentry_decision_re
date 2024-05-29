@@ -56,9 +56,12 @@
                         val_port="{aerial_type_choose}"/>
         </Sequence>
         <Sequence>
+          <Debugnode debug_output_id="114514"
+                     true_or_false="0"/>
           <CheckValNode val_desire="2"
                         val_port="{aerial_type_choose}"/>
-          <Debugnode debug_output_id="114514"/>
+          <Debugnode debug_output_id="114514"
+                     true_or_false="0"/>
           <NavToSpecificPlace target_place="{aerial_navigation_point}"/>
         </Sequence>
         <Sequence>
@@ -129,7 +132,8 @@
       <SubTree ID="RandomNavigation"
                area_id="{first_choose_id}"
                random_gen_limit="3"/>
-      <Debugnode debug_output_id="898989"/>
+      <Debugnode debug_output_id="898989"
+                 true_or_false="0"/>
     </Fallback>
   </BehaviorTree>
 
@@ -209,7 +213,7 @@
   </BehaviorTree>
 
   <BehaviorTree ID="tree2">
-    <Fallback>
+    <Sequence>
       <Fallback>
         <TimeBegin time_during="{time_during}"
                    true_or_false="1"/>
@@ -220,133 +224,126 @@
                      true_or_false="1"/>
         </Sequence>
       </Fallback>
-      <Sequence>
-        <SubTree ID="resurrection_decision"/>
-      </Sequence>
-      <Sequence>
-        <SubTree ID="aerial_operator_decision"
-                 _autoremap="false"/>
-      </Sequence>
-      <SubTree ID="resurrection_type_decision"/>
-      <Sequence>
-        <Fallback>
-          <Judgenemy my_outpost_blood_lowerbound="500"
-                     my_outpost_blood_upperbound="1500"
-                     enemy_outpost_blood_lowerbound="1"
-                     enemy_outpost_blood_upperbound="1500"/>
-          <Judgenemy my_outpost_blood_lowerbound="0"
-                     my_outpost_blood_upperbound="500"
-                     enemy_outpost_blood_lowerbound="1"
-                     enemy_outpost_blood_upperbound="600"/>
-        </Fallback>
-        <GimbalChooseBuildingNode id="108"
-                                  shooting_speed="3.0"
-                                  priority_type_arr=""
-                                  priority_level_arr=""/>
-        <SubTree ID="Navigation"
-                 area_choose="2"/>
-      </Sequence>
       <Fallback>
         <Sequence>
+          <SubTree ID="resurrection_decision"/>
+        </Sequence>
+        <Sequence>
+          <SubTree ID="aerial_operator_decision"
+                   _autoremap="false"/>
+        </Sequence>
+        <SubTree ID="resurrection_type_decision"/>
+        <Sequence>
+          <Fallback>
+            <Judgenemy my_outpost_blood_lowerbound="500"
+                       my_outpost_blood_upperbound="1500"
+                       enemy_outpost_blood_lowerbound="1"
+                       enemy_outpost_blood_upperbound="1500"/>
+            <Judgenemy my_outpost_blood_lowerbound="0"
+                       my_outpost_blood_upperbound="500"
+                       enemy_outpost_blood_lowerbound="1"
+                       enemy_outpost_blood_upperbound="600"/>
+          </Fallback>
+          <GimbalChooseBuildingNode id="108"
+                                    shooting_speed="3.0"
+                                    priority_type_arr=""
+                                    priority_level_arr=""/>
+          <SubTree ID="Navigation"
+                   area_choose="2"/>
+        </Sequence>
+        <Fallback>
           <SubTree ID="sub_decision"
                    decision_type="0"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="45"/>
-        </Sequence>
-        <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="1"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="11"/>
-        </Sequence>
-        <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="2"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="22"/>
-        </Sequence>
-        <Sequence>
           <SubTree ID="sub_decision"
                    decision_type="3"
                    _autoremap="true"/>
-          <Debugnode debug_output_id="33"/>
-        </Sequence>
-        <SubTree ID="tree_patrol_decision"/>
+          <SubTree ID="tree_patrol_decision"/>
+        </Fallback>
       </Fallback>
-    </Fallback>
+    </Sequence>
   </BehaviorTree>
 
   <BehaviorTree ID="tree_patrol_decision">
-    <Fallback>
-      <Sequence>
-        <CheckValNode val_desire="1"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="RandomNavigation"
-                 area_id="0"
-                 random_gen_limit="3"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="2"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="patrol_subtree_decision"
-                 strategy="{strategy_1}"
-                 first_choose_id="0"
-                 _autoremap="false"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="3"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="RandomNavigation"
-                 area_id="1"
-                 random_gen_limit="3"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="4"
-                      val_port="{patrol_decision_val}"/>
-        <SubTree ID="patrol_subtree_decision"
-                 strategy="{strategy_2}"
-                 first_choose_id="1"
-                 _autoremap="false"/>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="5"
-                      val_port="{patrol_decision_val}"/>
-        <Fallback>
-          <Sequence>
-            <TimeCompuLimit time_limit1="30"
-                            time_limit2="30"
-                            first_interval="0"
-                            time_switch="1"/>
-            <SubTree ID="RandomNavigation"
-                     area_id="0"/>
-          </Sequence>
+    <Sequence>
+      <PatrolTypeNode val_port="{patrol_decision_val}"/>
+      <Fallback>
+        <Sequence>
+          <CheckValNode val_desire="1"
+                        val_port="{patrol_decision_val}"/>
           <SubTree ID="RandomNavigation"
-                   area_id="1"/>
-        </Fallback>
-      </Sequence>
-      <Sequence>
-        <CheckValNode val_desire="6"
-                      val_port="{patrol_decision_val}"/>
-        <Fallback>
-          <Sequence>
-            <NavHealNode heal_navigation_point="{now_navigation_point}"
-                         interval_0="160"
-                         interval_1="400"/>
-            <NavToSpecificPlace target_place="{now_navigation_point}"/>
-          </Sequence>
-          <Sequence>
-            <TimeCompuLimit time_limit1="30"
-                            time_limit2="30"
-                            first_interval="0"
-                            time_switch="1"/>
-            <SubTree ID="RandomNavigation"
-                     area_id="0"/>
-          </Sequence>
+                   area_id="0"
+                   random_gen_limit="3"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="2"
+                        val_port="{patrol_decision_val}"/>
+          <SubTree ID="patrol_subtree_decision"
+                   strategy="{strategy_1}"
+                   first_choose_id="0"
+                   _autoremap="false"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="3"
+                        val_port="{patrol_decision_val}"/>
           <SubTree ID="RandomNavigation"
-                   area_id="1"/>
-        </Fallback>
-      </Sequence>
-    </Fallback>
+                   area_id="1"
+                   random_gen_limit="3"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="4"
+                        val_port="{patrol_decision_val}"/>
+          <SubTree ID="patrol_subtree_decision"
+                   strategy="{strategy_2}"
+                   first_choose_id="1"
+                   _autoremap="false"/>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="5"
+                        val_port="{patrol_decision_val}"/>
+          <Fallback>
+            <Sequence>
+              <TimeCompuLimit time_limit1="30"
+                              time_limit2="30"
+                              first_interval="0"
+                              time_switch="1"/>
+              <SubTree ID="RandomNavigation"
+                       area_id="0"/>
+            </Sequence>
+            <SubTree ID="RandomNavigation"
+                     area_id="1"/>
+          </Fallback>
+        </Sequence>
+        <Sequence>
+          <CheckValNode val_desire="6"
+                        val_port="{patrol_decision_val}"/>
+          <Fallback>
+            <Sequence>
+              <NavHealNode heal_navigation_point="{now_navigation_point}"
+                           interval_0="160"
+                           interval_1="400"/>
+              <NavToSpecificPlace target_place="{now_navigation_point}"/>
+            </Sequence>
+            <Sequence>
+              <TimeCompuLimit time_limit1="30"
+                              time_limit2="30"
+                              first_interval="0"
+                              time_switch="1"/>
+              <SubTree ID="RandomNavigation"
+                       area_id="0"/>
+            </Sequence>
+            <SubTree ID="RandomNavigation"
+                     area_id="1"/>
+          </Fallback>
+        </Sequence>
+      </Fallback>
+    </Sequence>
   </BehaviorTree>
 
   <!-- Description of Node Models (used by Groot) -->
@@ -372,6 +369,8 @@
     <Action ID="Debugnode"
             editable="true">
       <input_port name="debug_output_id"/>
+      <input_port name="true_or_false"
+                  default="0"/>
     </Action>
     <Action ID="DecideEnemy"
             editable="true">
@@ -456,6 +455,10 @@
       <input_port name="area_id"/>
       <input_port name="random_gen_limit"/>
       <inout_port name="now_navigation_point"/>
+    </Action>
+    <Action ID="PatrolTypeNode"
+            editable="true">
+      <output_port name="val_port"/>
     </Action>
     <Action ID="ResurrectionNode"
             editable="true">

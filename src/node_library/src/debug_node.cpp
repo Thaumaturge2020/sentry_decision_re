@@ -17,7 +17,7 @@ namespace BehaviorTree{
             RCLCPP_INFO(rclcpp::get_logger("debug_output"),"debug output %d",id);
         }
 
-        int type = 0;
+        int type;
         getInput<int>("true_or_false",type);
         if(type == 0) 
         return BT::NodeStatus::SUCCESS;

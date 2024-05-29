@@ -36,6 +36,7 @@ namespace BehaviorTree{
                             //取消选择
                             case 'Q': aerial_type = -1;break;
                         }
+                        RCLCPP_INFO(rclcpp::get_logger("aerial_type"),"aerial_type:%d",aerial_type);
                         target_enemy = -1;
                         if(msg.target_robot_id){
                             aerial_type = 4;
@@ -43,7 +44,11 @@ namespace BehaviorTree{
                         }
                         if(aerial_type == 2){
                             Eigen::Vector3d sub_vector;
-                            sub_vector = Eigen::Vector3d(msg.target_position_x,msg.target_position_y,0);
+                            sub_vector = Eigen::Vector3d(msg.target_position_x,msg.target_position_y,1);
+                            // RCLCPP_INFO(rclcpp::get_logger("vector_node"),"%lf %lf %lf",sub_vector[0],sub_vector[1],sub_vector[2]);
+                            // for(int i=0;i<3;++i)
+                            // RCLCPP_INFO(rclcpp::get_logger("vector_node"),"%lf %lf %lf",trans(i,0),trans(i,1),trans(i,2));
+
                             sub_vector = trans * sub_vector;
                             navigate_point.x = sub_vector[0];
                             navigate_point.y = sub_vector[1];

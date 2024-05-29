@@ -4,3 +4,6 @@
 [submodule "decision_dependence"]
 	path = decision_dependence
 	url = https://gitlab.ngxy.team/algo/sentry/decision_dependence.git
+[submodule "backward_ros"]
+	path = backward_ros
+	url = https://github.com/pal-robotics/backward_ros.git

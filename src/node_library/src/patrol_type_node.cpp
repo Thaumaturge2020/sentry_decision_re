@@ -1,4 +1,4 @@
-#include "behavior_tree_2/patrol_area_node.hpp"
+#include "node_library/patrol_type_node.hpp"
 
 namespace BehaviorTree{
     PatrolTypeNode::PatrolTypeNode(const std::string&name, const BT::NodeConfig& config):
@@ -16,5 +16,5 @@ namespace BehaviorTree{
 
 // BT_REGISTER_NODES(factory)
 // {
-//   factory.registerNodeType<BehaviorTree::PatrolTypeNode>("NavUNode");
+//   factory.registerNodeType<BehaviorExTree::PatrolTypeNode>("NavUNode");
 // }

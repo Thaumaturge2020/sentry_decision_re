@@ -29,10 +29,10 @@ namespace BehaviorTree{
             my_outpost_blood_upperbound,
             enemy_outpost_blood_lowerbound,
             enemy_outpost_blood_upperbound;
-        if(!getInput<int>("my_outpost_blood_lowerbound",my_outpost_blood_lowerbound)) return BT::NodeStatus::FAILURE;
-        if(!getInput<int>("my_outpost_blood_upperbound",my_outpost_blood_upperbound)) return BT::NodeStatus::FAILURE;
-        if(!getInput<int>("enemy_outpost_blood_lowerbound",enemy_outpost_blood_lowerbound)) return BT::NodeStatus::FAILURE;
-        if(!getInput<int>("enemy_outpost_blood_upperbound",enemy_outpost_blood_upperbound)) return BT::NodeStatus::FAILURE;
+        if(!getInput<int>("my_outpost_blood_lowerbound",my_outpost_blood_lowerbound)) {RCLCPP_INFO(rclcpp::get_logger("outpost_judge"),"my outpost lower"); return BT::NodeStatus::FAILURE;}
+        if(!getInput<int>("my_outpost_blood_upperbound",my_outpost_blood_upperbound)) {RCLCPP_INFO(rclcpp::get_logger("outpost_judge"),"my outpost upper");return BT::NodeStatus::FAILURE;}
+        if(!getInput<int>("enemy_outpost_blood_lowerbound",enemy_outpost_blood_lowerbound)) {RCLCPP_INFO(rclcpp::get_logger("outpost_judge"),"enemy outpost lower");return BT::NodeStatus::FAILURE;}
+        if(!getInput<int>("enemy_outpost_blood_upperbound",enemy_outpost_blood_upperbound)) {RCLCPP_INFO(rclcpp::get_logger("outpost_judge"),"enemy outpost upper");return BT::NodeStatus::FAILURE;}
         if(my_outpost < my_outpost_blood_lowerbound) return BT::NodeStatus::FAILURE;
         if(my_outpost > my_outpost_blood_upperbound) return BT::NodeStatus::FAILURE;
         if(enemy_outpost < enemy_outpost_blood_lowerbound) return BT::NodeStatus::FAILURE;
