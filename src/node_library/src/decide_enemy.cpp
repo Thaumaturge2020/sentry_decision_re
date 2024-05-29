@@ -22,9 +22,7 @@ namespace BehaviorTree{
                     robot_map_connectivity = toml::find<std::vector<std::vector<int> > >(toml_battle_file,"generate_graph_edge");
                     robot_map_field = toml::find<std::vector<std::vector<std::pair<double,double> > > >(toml_battle_file,"generate_poly");
                     robot_centre_point = toml::find<std::vector< std::pair<double,double> > >(toml_battle_file,"generate_centre_point");
-                    robot_graph_height = toml::find<std::vector< double > >(toml_battle_file,"generate_graph_height");
-
-                    
+                    robot_graph_height = toml::find<std::vector< double > >(toml_battle_file,"generate_graph_height");                    
 
                     std::vector<double> empty;
 

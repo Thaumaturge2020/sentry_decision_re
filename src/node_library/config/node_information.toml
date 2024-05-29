@@ -6,3 +6,5 @@ default_priority = [1,1,1,1,1,1,1,1]
 decide_enemy_vector_priority = [[7,1],[2],[3,4]]
 
 tree1_initial_priority_input = [[1,8],[2,3,4,5,7,9]]    
+
+resurrection_input = [[1],[2,3,4,5,6,7,8]]

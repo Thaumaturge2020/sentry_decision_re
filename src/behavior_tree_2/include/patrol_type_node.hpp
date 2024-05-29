@@ -1,5 +1,5 @@
-#ifndef RM_SENTRY_2024_PATROL_AREA_NODE_
-#define RM_SENTRY_2024_PATROL_AREA_NODE_
+#ifndef RM_SENTRY_2024_PATROL_TYPE_NODE_
+#define RM_SENTRY_2024_PATROL_TYPE_NODE_
 
 #include <rclcpp/rclcpp.hpp>
 #include "behaviortree_cpp/bt_factory.h"
@@ -8,10 +8,10 @@
 #include "std_msgs/msg/int32.hpp"
 
 namespace BehaviorTree{
-    class PatrolAreaNode:public BT::SyncActionNode{
+    class PatrolTypeNode:public BT::SyncActionNode{
         public:
 
-        PatrolAreaNode(const std::string&name, const BT::NodeConfig& config);
+        PatrolTypeNode(const std::string&name, const BT::NodeConfig& config);
 
         int patrol_type;
 

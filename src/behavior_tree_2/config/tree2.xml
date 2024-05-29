@@ -149,6 +149,29 @@
     </Sequence>
   </BehaviorTree>
 
+  <BehaviorTree ID="resurrection_type_decision">
+    <Sequence>
+      <ResurrectionTypeNode val_port="{resurrection_type_choose}"/>
+      <CheckValNode val_desire="1"
+                    val_port="{resurrection_type_choose}"/>
+      <DecideEnemy target_enemy_id="{enemy_id}"
+                   chase_or_not="{chase_or_not}"
+                   priority_input="resurrection_input"
+                   chase_distance_limit="18"
+                   chase_distance_able="6"
+                   priority_output="{priority_output}"/>
+      <GimbalChooseEnemyNode now_enemy_id="{enemy_id}"
+                             priority_input="{priority_output}"
+                             priority_type="1_1_1_1_1_1_1_1"
+                             priority_input_str=""/>
+      <Fallback>
+        <CheckValNode val_desire="{chase_or_not}"
+                      val_port="1"/>
+        <NavToEnemy now_enemy_id="{enemy_id}"/>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
   <BehaviorTree ID="sub_decision">
     <Sequence>
       <ParamNode1 decision_type="{decision_type}"
@@ -204,6 +227,7 @@
         <SubTree ID="aerial_operator_decision"
                  _autoremap="false"/>
       </Sequence>
+      <SubTree ID="resurrection_type_decision"/>
       <Sequence>
         <Fallback>
           <Judgenemy my_outpost_blood_lowerbound="500"
@@ -436,6 +460,10 @@
     <Action ID="ResurrectionNode"
             editable="true">
       <input_port name="area_choose"/>
+    </Action>
+    <Action ID="ResurrectionTypeNode"
+            editable="true">
+      <input_port name="val_port"/>
     </Action>
     <Action ID="SetValNode"
             editable="true">
