@@ -268,12 +268,12 @@
                                       priority_level_arr=""/>
           </Fallback>
           <Debugnode debug_output_id="589"
-                     true_or_false="1"/>
+                     true_or_false="0"/>
           <SubTree ID="Navigation"
                    area_choose="2"/>
         </Sequence>
         <Fallback>
-          <Debugnode debug_output_id="55"
+          <Debugnode debug_output_id="57"
                      true_or_false="1"/>
           <SubTree ID="sub_decision"
                    decision_type="0"

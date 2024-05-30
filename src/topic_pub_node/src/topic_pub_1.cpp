@@ -4,6 +4,7 @@
 #include "robot_msgs/msg/autoaim_info.hpp"
 #include "std_msgs/msg/int32.hpp"
 #include "robot_msgs/msg/robot_blood_info.hpp"
+#include "robot_msgs/msg/chassis_info.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "toml.hpp"
 
@@ -16,6 +17,7 @@ namespace topic_pub_node_1 {
         rclcpp::Publisher<robot_msgs::msg::AutoaimInfo>::SharedPtr publisher_1;
         rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publisher_2;
         rclcpp::Publisher<robot_msgs::msg::AerialCommands>::SharedPtr publisher_3;
+        rclcpp::Publisher<robot_msgs::msg::ChassisInfo>::SharedPtr publisher_4;
 
         std::pair<double,double> self_position;
         std::vector<std::pair<double,double> > robot_position_vector;
@@ -27,6 +29,7 @@ namespace topic_pub_node_1 {
                   publisher_1 = this->create_publisher<robot_msgs::msg::AutoaimInfo>("/autoaim2decision", 10);
                   publisher_2 = this->create_publisher<nav_msgs::msg::Odometry>("/Odometry_Vehicle", 10);
                   publisher_3 = this->create_publisher<robot_msgs::msg::AerialCommands>("/easy_robot_commands/map_command",10);
+                  publisher_4 = this->create_publisher<robot_msgs::msg::ChassisInfo>("/easy_robot_commands/chassis_info",10);
 
                   const auto toml_file = toml::parse(ROOT "config/config.toml");
                   self_position = toml::find<std::pair<double,double> >(toml_file,"self_position");
@@ -41,6 +44,7 @@ namespace topic_pub_node_1 {
             robot_msgs::msg::RobotInfo data1;
             robot_msgs::msg::RobotBattleState data2;
             robot_msgs::msg::AerialCommands data3;
+            robot_msgs::msg::ChassisInfo data4;
             data2.id = 0,data2.blood = 100;
             data1.id = 1,data1.pos.x = 8,data1.pos.y = 8,data1.pos.z = 0;
             const auto toml_file = toml::parse(ROOT "config/config.toml");
@@ -51,6 +55,14 @@ namespace topic_pub_node_1 {
 
             data3.target_position_x = toml::find<double>(toml_file,"target_position_x");
             data3.target_position_y = toml::find<double>(toml_file,"target_position_y");
+
+            data4.vx = toml::find<double>(toml_file,"Vx");
+            data4.vy = toml::find<double>(toml_file,"Vy");
+            data4.wz = toml::find<double>(toml_file,"Wz");
+            data4.cap_voltage = toml::find<int>(toml_file,"cap_enable");
+            
+            publisher_4->publish(data4);
+
 
             double start_pos_x = 2.898,start_pos_y = 3.353;
             

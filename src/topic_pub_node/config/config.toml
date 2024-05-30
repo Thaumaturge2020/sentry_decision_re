@@ -1,6 +1,6 @@
 
 # hero,engineer,soldier,soldier,soldier,sentry,outpost,base
-blood_array = [100,100,100,100,100,400,0,1500,
+blood_array = [100,100,100,100,100,400,1500,1500,
 100,100,100,100,100,400,1500,500]
 game_time = 10
 robot_id = 107
@@ -23,3 +23,10 @@ self_position = [5.0,5.0]
 
 target_position_x = 8.16
 target_position_y = 6.08
+
+# ChassisInfo
+Vx = 100.0
+Vy = 100.0
+Wz = 0.0
+
+cap_enable = 0
