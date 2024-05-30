@@ -36,7 +36,6 @@ namespace BehaviorTree{
                             //取消选择
                             case 'Q': aerial_type = -1;break;
                         }
-                        RCLCPP_INFO(rclcpp::get_logger("aerial_type"),"aerial_type:%d",aerial_type);
                         target_enemy = -1;
                         if(msg.target_robot_id){
                             aerial_type = 4;

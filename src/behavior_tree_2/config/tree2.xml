@@ -7,7 +7,7 @@
                    time_begin="0"
                    navigation_point="{now_navigation_point}"
                    distance_limit="1.0"
-                   time_limit="7.0"/>
+                   time_limit="3.5"/>
       <Patrol2Node distance_limit_min="1.0"
                    now_navigation_point="{now_navigation_point}"
                    navigation_point="{now_navigation_point}"
@@ -225,13 +225,10 @@
         </Sequence>
       </Fallback>
       <Fallback>
-        <Sequence>
-          <SubTree ID="resurrection_decision"/>
-        </Sequence>
-        <Sequence>
-          <SubTree ID="aerial_operator_decision"
-                   _autoremap="false"/>
-        </Sequence>
+        <SubTree ID="aerial_operator_decision"
+                 _autoremap="false"/>
+        <SubTree ID="resurrection_decision"/>
+        <SubTree ID="RecoverTreeOnce"/>
         <SubTree ID="resurrection_type_decision"/>
         <Sequence>
           <Fallback>

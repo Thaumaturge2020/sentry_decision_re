@@ -7,7 +7,7 @@
                    time_begin="0"
                    navigation_point="{now_navigation_point}"
                    distance_limit="1.0"
-                   time_limit="7.0"/>
+                   time_limit="3.5"/>
       <Patrol2Node distance_limit_min="1.0"
                    now_navigation_point="{now_navigation_point}"
                    navigation_point="{now_navigation_point}"
@@ -233,13 +233,12 @@
         </Sequence>
       </Fallback>
       <Fallback>
-        <SubTree ID="resurrection_decision"/>
         <SubTree ID="aerial_operator_decision"
                  _autoremap="false"/>
+        <SubTree ID="RecoverTreeOnce"/>
         <SubTree ID="resurrection_type_decision"/>
+        <SubTree ID="resurrection_decision"/>
         <Sequence>
-          <Debugnode debug_output_id="98765"
-                     true_or_false="0"/>
           <Fallback>
             <Judgenemy my_outpost_blood_lowerbound="500"
                        my_outpost_blood_upperbound="1500"
@@ -249,11 +248,7 @@
                        my_outpost_blood_upperbound="500"
                        enemy_outpost_blood_lowerbound="1"
                        enemy_outpost_blood_upperbound="600"/>
-            <Debugnode debug_output_id="989898989"
-                       true_or_false="1"/>
           </Fallback>
-          <Debugnode debug_output_id="45678"
-                     true_or_false="0"/>
           <Fallback>
             <Sequence>
               <DecideEnemy target_enemy_id="{target_enemy_id}"
@@ -272,13 +267,19 @@
                                       priority_type_arr=""
                                       priority_level_arr=""/>
           </Fallback>
+          <Debugnode debug_output_id="589"
+                     true_or_false="1"/>
           <SubTree ID="Navigation"
                    area_choose="2"/>
         </Sequence>
         <Fallback>
+          <Debugnode debug_output_id="55"
+                     true_or_false="1"/>
           <SubTree ID="sub_decision"
                    decision_type="0"
                    _autoremap="true"/>
+          <Debugnode debug_output_id="57"
+                     true_or_false="1"/>
           <SubTree ID="sub_decision"
                    decision_type="1"
                    _autoremap="true"/>

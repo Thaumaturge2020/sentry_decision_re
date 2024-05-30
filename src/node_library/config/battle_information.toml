@@ -69,7 +69,7 @@ chase_distance_limit = [18.0,12.0,18.0,18.0]
 chase_distance_able = [6.0,4.0,6.0,6.0]
 # area_choose = [0,0,1,2]
 # area_choose = [0,0,2,3]
-area_choose = [2,2,1,1] # 暂时，需要时改成上面的。
+area_choose = [0,2,1,1] # 暂时，需要时改成上面的。
 priority_input = ["decide_enemy_vector_priority","decide_enemy_vector_priority","decide_enemy_vector_priority","decide_enemy_vector_priority"]
 priority_type = ["1_1_1_1_1_1_1_1","1_2_1_1_1_1_1_1","1_1_1_1_1_1_1_1","1_1_1_1_1_1_1_1"]
 
@@ -89,7 +89,8 @@ priority_type = ["1_1_1_1_1_1_1_1","1_2_1_1_1_1_1_1","1_1_1_1_1_1_1_1","1_1_1_1_
 # 这些都需要标记
 
 navigation_position = [
-[[0.0,0.0]], #0
+[[3.88,-13.98],
+[0.66,-13.98]], #0
 
 [[1.180817, 0.6832],
 [4.83863, 0.38556]], #1
@@ -106,8 +107,7 @@ navigation_position = [
 
 [[6.0,6.0]], # 7
 
-[[-1.85312, -7.46678],
-[-1.23297, -6.27326]] # 8
+[[2.51962, 3.23328]] # 8
 
 ]
 

@@ -11,6 +11,7 @@
 #include "robot_msgs/msg/build_state.hpp"
 #include "robot_msgs/msg/cam_command.hpp"
 #include "robot_msgs/msg/decision_points.hpp"
+#include "robot_msgs/msg/chassis_info.hpp"
 #include "rm_interfaces/msg/perception.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 
@@ -57,6 +58,8 @@ namespace topic_transimit_node {
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_odometry;
         rclcpp::Subscription<robot_msgs::msg::WalkCmd>::SharedPtr subscription_goal;
         rclcpp::Subscription<geometry_msgs::msg::WrenchStamped>::SharedPtr subscription_vel;
+
+        rclcpp::Subscription<robot_msgs::msg::ChassisInfo>::SharedPtr subscription_chassis_info;
 
 
         rclcpp::Subscription<robot_msgs::msg::CamCommand>::SharedPtr subscription_enemy_pos;
@@ -125,6 +128,10 @@ namespace topic_transimit_node {
                     if(enemy_sentry_invicinble){
                         msg.priority_type_arr[5] = 2;
                     }
+                    if(sentry_vel > 1000){
+                        msg.priority_type_arr[6] = 2;
+                        msg.priority_type_arr[7] = 2;
+                    }
                     publisher_10->publish(msg);
                   });
 
@@ -149,7 +156,10 @@ namespace topic_transimit_node {
                     pub_msg.point1 = next_position_2;
                     pub_msg.point2 = goal_position_2;
                     publisher_11->publish(pub_msg);
-
+                    
+                    if(ally_sentry_invicinble)
+                    walk_msg.radium = 0;
+                    else
                     walk_msg.radium = sentry_pub_omiga;
                     publisher_12->publish(walk_msg);
                   });
@@ -159,11 +169,17 @@ namespace topic_transimit_node {
                   subscription_spin = this->create_subscription<std_msgs::msg::Int32>("/decision2ECbasespin",10,std::bind(&TopicTransmitter::subscription_Spin_Data,this,std::placeholders::_1));
 
                   subscription_vel = this->create_subscription<geometry_msgs::msg::WrenchStamped>("/cmd_vel",10,[this](const geometry_msgs::msg::WrenchStamped &msg){
-                    sentry_vel = sqrt((msg.wrench.force.x*msg.wrench.force.x)+(msg.wrench.force.y*msg.wrench.force.y));
+                    //sentry_vel = sqrt((msg.wrench.force.x*msg.wrench.force.x)+(msg.wrench.force.y*msg.wrench.force.y));
                     if(game_time_msg.data > 0 && game_time_msg.data <= 420)
                     sentry_pub_omiga = 540 / (sentry_vel/100 + 1);
                     else
                     sentry_pub_omiga = 0;
+                  });
+
+                  subscription_chassis_info = this->create_subscription<robot_msgs::msg::ChassisInfo>("/easy_robot_commands/chassis_info",10,[this](const robot_msgs::msg::ChassisInfo &msg){
+                    double  vel_x = msg.vx,
+                            vel_y = msg.vy;
+                    sentry_vel = sqrt(vel_x*vel_x+vel_y*vel_y);
                   });
                   
                   spin_flag = -1;

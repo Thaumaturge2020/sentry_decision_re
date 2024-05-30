@@ -28,7 +28,7 @@ namespace BehaviorTree{
         int self_last_blood;
         rclcpp::Time recover_start_time;
         rclcpp::Time occupy_start_time;
-        int blood_limit;
+        int blood_limit,time_limit;
         double given_distance_limit;
         geometry_msgs::msg::Point navigation_point_input;
 
